@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>МЛУ ТБ · Исследование · Ладью Р.С.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#f4f6fa;--surface:#fff;--surface2:#f0f3f8;--surface3:#e8edf5;
+  --border:#dce3ee;--border2:#c8d3e5;
+  --text:#1a2340;--text2:#4a5578;--text3:#8892aa;
+  --navy:#0f2d6b;--blue:#1a6bc4;--blue2:#2880e4;
+  --teal:#0891b2;--green:#16a34a;--red:#dc2626;--yellow:#ca8a04;
+  --orange:#c2410c;--purple:#7c3aed;
+  --r:10px;--rsm:6px;
+  --shadow:0 1px 3px rgba(15,45,107,.07),0 4px 12px rgba(15,45,107,.04);
+  --shadow2:0 2px 8px rgba(15,45,107,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',-apple-system,sans-serif;font-size:13.5px;line-height:1.5;min-height:100vh}
+
+/* === NAV === */
+.nav{background:var(--navy);position:sticky;top:0;z-index:300;box-shadow:0 2px 12px rgba(15,45,107,.2)}
+.nav-top{display:flex;align-items:center;padding:0 20px;height:50px;gap:14px}
+.nav-brand{font-weight:700;font-size:13.5px;color:#fff;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.nav-brand span{color:#93c5fd;font-size:11px;font-weight:500}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:.15s;white-space:nowrap}
+.nav-btn:hover{background:rgba(255,255,255,.22)}
+.nav-tabs{display:flex;overflow-x:auto;border-top:1px solid rgba(255,255,255,.1);scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.tab{padding:9px 16px;color:rgba(255,255,255,.6);cursor:pointer;font-size:12px;white-space:nowrap;border-bottom:2px solid transparent;transition:.15s;display:flex;align-items:center;gap:5px;user-select:none}
+.tab:hover{color:#fff;background:rgba(255,255,255,.06)}
+.tab.active{color:#fff;border-bottom-color:#60a5fa;background:rgba(255,255,255,.08)}
+.tbadge{background:#ef4444;color:#fff;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:8px}
+
+/* === LAYOUT === */
+.page{display:none;padding:18px;max-width:1700px;margin:0 auto}
+.page.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:1100px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* === CARDS === */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.9px}
+.card-icon{font-size:14px}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sh-title{font-size:16px;font-weight:700;color:var(--navy)}
+.sh-tag{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:3px 11px;border-radius:20px;font-weight:500;white-space:nowrap}
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* === STAT CARDS (no colored bars) === */
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px}
+.sc-val{font-size:28px;font-weight:800;line-height:1}
+.sc-label{font-size:12px;color:var(--text2);font-weight:500}
+.sc-sub{font-size:11px;color:var(--text3)}
+.sc.c-blue .sc-val{color:var(--blue)}
+.sc.c-green .sc-val{color:var(--green)}
+.sc.c-red .sc-val{color:var(--red)}
+.sc.c-orange .sc-val{color:var(--orange)}
+.sc.c-purple .sc-val{color:var(--purple)}
+.sc.c-teal .sc-val{color:var(--teal)}
+.sc.c-navy .sc-val{color:var(--navy)}
+.sc.c-yellow .sc-val{color:var(--yellow)}
+
+/* === BADGES === */
+.b{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bg{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+.bb{background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe}
+.by{background:#fef9c3;color:#854d0e;border:1px solid #fde68a}
+.br{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.bp{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe}
+.bt{background:#cffafe;color:#0e7490;border:1px solid #a5f3fc}
+.bgy{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.bn{background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe}
+.bo{background:#ffedd5;color:#c2410c;border:1px solid #fed7aa}
+
+/* === TABLES === */
+.tw{border:1px solid var(--border);border-radius:var(--r);overflow:auto;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:var(--surface2);color:var(--text2);font-weight:600;font-size:11px;padding:9px 11px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:1}
+td{padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(26,107,196,.02)}
+.tr-ok td:first-child{border-left:3px solid var(--green)}
+.tr-act td:first-child{border-left:3px solid var(--blue)}
+.tr-ex td:first-child{border-left:3px solid var(--red)}
+.tr-nd td:first-child{border-left:3px solid var(--text3)}
+.tr-warn td:first-child{border-left:3px solid var(--yellow)}
+
+/* === EDITABLE === */
+[contenteditable]{outline:none;border-radius:3px;padding:1px 4px;margin:-1px -4px;cursor:text;transition:.1s}
+[contenteditable]:hover{background:var(--surface2)}
+[contenteditable]:focus{background:#dbeafe;box-shadow:0 0 0 2px rgba(26,107,196,.2)}
+[contenteditable]:empty:before{content:attr(placeholder);color:var(--text3);font-style:italic;pointer-events:none}
+
+/* === NOTES === */
+.note{background:#fffbeb;border:1px solid #fde68a;border-radius:5px;padding:8px 11px;font-size:12.5px;min-width:120px}
+.note[contenteditable]:hover{background:#fef9c3}
+.note[contenteditable]:focus{background:#fef9c3;box-shadow:0 0 0 2px rgba(202,138,4,.2)}
+.note:empty:before{content:'Примечание…';color:#a3996a;font-style:italic}
+
+/* === PROGRESS === */
+.pr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pr-label{font-size:12px;color:var(--text2);min-width:110px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-bg{flex:1;background:var(--surface3);border-radius:99px;height:6px;min-width:60px}
+.pr-fill{height:6px;border-radius:99px;transition:width .5s}
+.pr-num{font-size:12px;color:var(--text2);min-width:48px;text-align:right;font-weight:600;flex-shrink:0}
+
+/* === FLAGS === */
+.flag{display:flex;gap:10px;padding:9px 12px;border-radius:6px;margin-bottom:7px;font-size:12.5px;align-items:flex-start}
+.f-r{background:#fff1f2;border:1px solid #fecdd3}
+.f-y{background:#fffbeb;border:1px solid #fde68a}
+.f-b{background:#eff6ff;border:1px solid #bfdbfe}
+.f-g{background:#f0fdf4;border:1px solid #bbf7d0}
+.f-p{background:#f5f3ff;border:1px solid #ddd6fe}
+.fi{font-size:15px;flex-shrink:0;margin-top:1px}
+
+/* === INPUTS === */
+input[type=text],input[type=number],input[type=date],textarea,select{
+  background:var(--surface);border:1px solid var(--border);color:var(--text);
+  padding:6px 10px;border-radius:var(--rsm);font-size:13px;outline:none;font-family:inherit;width:100%}
+input[type=text]:focus,input[type=number]:focus,input[type=date]:focus,textarea:focus,select:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,196,.12)}
+textarea{resize:vertical;min-height:60px}
+
+/* === BUTTONS === */
+.btn{padding:6px 15px;border-radius:var(--rsm);cursor:pointer;font-size:12.5px;font-weight:600;border:none;transition:.15s;font-family:inherit;white-space:nowrap}
+.btn-p{background:var(--blue);color:#fff}
+.btn-p:hover{background:var(--blue2)}
+.btn-s{background:var(--green);color:#fff}
+.btn-s:hover{background:#15803d}
+.btn-o{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-o:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.btn-d{background:var(--red);color:#fff}
+.btn-add{background:transparent;border:1.5px dashed var(--border2);color:var(--text3);padding:8px;width:100%;border-radius:6px;cursor:pointer;font-size:12px;margin-top:8px;transition:.15s;font-family:inherit}
+.btn-add:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,107,196,.04)}
+
+/* === CTX MENU === */
+.ctx{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px;box-shadow:var(--shadow2);z-index:9999;display:none;min-width:220px}
+.ctx.show{display:block}
+.ctx-title{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.cg{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
+.cd{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:.1s}
+.cd:hover{transform:scale(1.2);border-color:var(--text2)}
+
+/* === PLATFORM CARDS === */
+.pc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;position:relative;box-shadow:var(--shadow)}
+.pc-name{font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:3px;padding-right:90px}
+.pc-id{font-size:10.5px;color:var(--text3);font-family:monospace;margin-bottom:8px}
+.pc-row{display:flex;align-items:baseline;gap:6px;margin-bottom:3px;font-size:12.5px}
+.pc-lbl{color:var(--text3);font-size:11px;min-width:80px;flex-shrink:0}
+.pc-status{position:absolute;top:12px;right:12px}
+.msg-wrap{margin-top:10px}
+.msg-bar{height:5px;background:var(--surface3);border-radius:99px;overflow:hidden;margin-top:4px}
+.msg-fill{height:5px;border-radius:99px}
+.msg-text{font-size:11px;color:var(--text3);display:flex;justify-content:space-between}
+
+/* === TIMELINE === */
+.tl{padding-left:22px}
+.tl-item{position:relative;padding-bottom:14px}
+.tl-item:before{content:'';position:absolute;left:-16px;top:8px;bottom:-2px;width:1px;background:var(--border)}
+.tl-item:last-child:before{display:none}
+.tl-dot{position:absolute;left:-20px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--surface3);border:2px solid var(--border2)}
+.tl-dot.done{background:var(--green);border-color:#15803d}
+.tl-dot.now{background:var(--blue);border-color:var(--blue2);box-shadow:0 0 0 3px rgba(26,107,196,.2)}
+.tl-date{font-size:10.5px;color:var(--text3);margin-bottom:1px}
+
+/* === MODAL === */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--surface);border-radius:var(--r);padding:24px;width:min(700px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:16px;font-weight:700;color:var(--navy)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1}
+.modal-close:hover{color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:11.5px;color:var(--text2);font-weight:600}
+.form-full{grid-column:1/-1}
+
+/* === ANALYTICS TABS === */
+.atabs{display:flex;gap:2px;background:var(--surface2);border-radius:7px;padding:3px;margin-bottom:14px;border:1px solid var(--border)}
+.atab{padding:6px 16px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);transition:.15s}
+.atab.active{background:var(--surface);color:var(--navy);box-shadow:var(--shadow)}
+.atab-content{display:none}
+.atab-content.active{display:block}
+
+/* === COMPARISON TABLE === */
+.cmp{width:100%;border-collapse:collapse;font-size:12.5px;border-radius:var(--r);overflow:hidden}
+.cmp th{padding:10px 13px;text-align:left;font-size:12px;font-weight:600}
+.cmp td{padding:9px 13px;border-bottom:1px solid var(--border)}
+.cmp .p-sig{color:var(--red);font-weight:700}
+.cmp .p-ns{color:var(--text3)}
+
+/* === HEAT MAP === */
+.heat-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.heat-label{font-size:11.5px;color:var(--text2);min-width:140px;flex-shrink:0}
+.heat-cell{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;transition:.1s;flex-shrink:0}
+.heat-cell:hover{transform:scale(1.2)}
+.hc-ok{background:#dcfce7;color:#15803d}
+.hc-mild{background:#fef9c3;color:#854d0e}
+.hc-mod{background:#ffedd5;color:#c2410c}
+.hc-sev{background:#fee2e2;color:#991b1b}
+.hc-na{background:var(--surface3);color:var(--text3)}
+
+/* === DRAG UPLOAD === */
+.drop-zone{border:2px dashed var(--border2);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer;transition:.15s;background:var(--surface2)}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--blue);background:#eff6ff}
+.drop-text{font-size:12px;color:var(--text3)}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px}
+.img-thumb{border-radius:7px;overflow:hidden;border:1px solid var(--border);position:relative;aspect-ratio:4/3;background:var(--surface2)}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.img-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
+.img-note{font-size:11px;color:var(--text2);padding:4px;background:var(--surface2);border-top:1px solid var(--border);min-height:28px}
+.img-note[contenteditable]:focus{background:#dbeafe}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* === MISC === */
+.section-break{margin:16px 0 10px;display:flex;align-items:center;gap:10px}
+.section-break-title{font-size:13.5px;font-weight:700;color:var(--navy);white-space:nowrap}
+.section-break-line{flex:1;height:1px;background:var(--border)}
+.tag-mlu{background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px}
+.tag-prexlu{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px}
+.tag-grp{display:inline-flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;color:var(--text2)}
+.save-ok{font-size:11px;color:#86efac;opacity:0;transition:.3s}
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.fc{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:4px 12px;border-radius:20px;cursor:pointer;font-size:11.5px;font-weight:500;transition:.15s}
+.fc:hover{border-color:var(--blue);color:var(--blue)}
+.fc.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* === GROUP LEGEND === */
+.grp-legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);margin-bottom:12px;font-size:12px}
+.gl-item{display:flex;align-items:center;gap:5px}
+</style>
+</head>
+<body>
+
+<!-- CONTEXT MENU -->
+<div class="ctx" id="ctxMenu">
+  <div class="ctx-title">Цвет плашки</div>
+  <div class="cg" id="bgCols"></div>
+  <div class="ctx-title">Цвет текста</div>
+  <div class="cg" id="fgCols"></div>
+  <div style="display:flex;gap:6px">
+    <button class="btn btn-o" style="font-size:11px;padding:3px 10px" onclick="ctxReset()">Сброс</button>
+    <button class="btn btn-p" style="font-size:11px;padding:3px 10px" onclick="ctxClose()">OK</button>
+  </div>
+</div>
+
+<!-- ADD PATIENT MODAL -->
+<div class="modal-bg" id="addModal">
+  <div class="modal">
+    <div class="modal-h">
+      <div class="modal-title">Добавить пациента в ОГ</div>
+      <button class="modal-close" onclick="closeAddModal()">×</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>ID пациента *</label><input type="text" id="f-id" placeholder="Напр.: 18ВАА, П-07…"></div>
+      <div class="form-group"><label>Регион *</label>
+        <select id="f-region">
+          <option value="kemer">Кемерово</option><option value="vor">Воронеж</option>
+          <option value="astr">Астрахань</option><option value="nnov">Нижний Новгород</option>
+          <option value="oren">Оренбург</option><option value="nmits">НМИЦ ФПИ</option>
+          <option value="lenob">Ленинградская обл.</option><option value="krasn">Краснодар</option>
+          <option value="kursk">Курская обл.</option><option value="sakhal">Сахалин</option>
+          <option value="other">Другой регион</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Дата В/в ЛУ</label><input type="text" id="f-date" placeholder="дд.мм.гггг"></div>
+      <div class="form-group"><label>Возраст / Пол</label><input type="text" id="f-age" placeholder="Напр.: 43 / М"></div>
+      <div class="form-group form-full"><label>Форма ТБ / Локализация</label><input type="text" id="f-form" placeholder="Напр.: Инфильтративный, S1-2 прав. лёгк., распад"></div>
+      <div class="form-group form-full"><label>Схема химиотерапии</label><input type="text" id="f-xt" placeholder="Напр.: Bq+Lfx 0,75+Dlm 0,2+Cfz 0,1"></div>
+      <div class="form-group"><label>Группа</label>
+        <select id="f-grp">
+          <option value="гр.1.1">гр.1.1 — МЛУ ТБ (Bq+Lfx+Dlm+Cfz)</option>
+          <option value="гр.1.2">гр.1.2 — МЛУ ТБ (Bq+Lzd+Lfx/Mfx+Cfz)</option>
+          <option value="гр.1.3">гр.1.3 — МЛУ ТБ (Bq+Lzd+Lfx+Cfz±Cs)</option>
+          <option value="гр.1.4">гр.1.4 — пре-ШЛУ ТБ</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Дозы принято</label><input type="number" id="f-doses" placeholder="0"></div>
+      <div class="form-group"><label>Статус</label>
+        <select id="f-status">
+          <option value="active">В процессе</option>
+          <option value="complete">Завершён ✓</option>
+          <option value="excluded">Исключён</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Врач / ТМК</label><input type="text" id="f-doc" placeholder="ФИО врача"></div>
+      <div class="form-group form-full"><label>НЯ / Особые отметки</label><input type="text" id="f-ae" placeholder="Нежелательные явления, осложнения…"></div>
+      <div class="form-group form-full"><label>МБТ статус исходно</label><input type="text" id="f-mbt" placeholder="МБТ(-)/МБТ(+), ПЦР(-)/ПЦР(+)"></div>
+      <div class="form-group form-full"><label>Примечание</label><textarea id="f-note" placeholder="Дополнительная информация…" style="min-height:50px"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-o" onclick="closeAddModal()">Отмена</button>
+      <button class="btn btn-p" onclick="submitAddPatient()">Добавить пациента</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-top">
+    <div class="nav-brand">МЛУ ТБ · Диссертация · Ладью Р.С. <span>НМИЦ ФПИ · 2025–2027</span></div>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="exportExcel()">⬇ Экспорт Excel</button>
+      <button class="nav-btn" onclick="saveAll()">💾 Сохранить</button>
+      <span class="save-ok" id="save-ok">✓ Сохранено</span>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <div class="tab active" onclick="goTab('dash',this)">🏠 Дашборд</div>
+    <div class="tab" onclick="goTab('og',this)">👥 Основная группа</div>
+    <div class="tab" onclick="goTab('kg',this)">🏥 Контрольная группа</div>
+    <div class="tab" onclick="goTab('anal',this)">📊 Аналитика</div>
+    <div class="tab" onclick="goTab('ct',this)">🫁 КТ / Клиника</div>
+    <div class="tab" onclick="goTab('micro',this)">🧫 Микробиология</div>
+    <div class="tab" onclick="goTab('plat',this)">📱 ТубоМед <span class="tbadge">7</span></div>
+    <div class="tab" onclick="goTab('reg',this)">🗺 Регионы</div>
+    <div class="tab" onclick="goTab('task',this)">📋 Задачи</div>
+  </div>
+</nav>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="page active" id="page-dash">
+  <div class="sh" style="margin-bottom:16px">
+    <div class="sh-title">Сводный дашборд исследования</div>
+    <div class="sh-tag" id="update-date-label">Обновлено: —</div>
+    <div style="margin-left:auto">
+      <button class="btn btn-p" onclick="openAddModal()">+ Добавить пациента</button>
+    </div>
+  </div>
+
+  <!-- TOP STATS -->
+  <div class="g5" style="margin-bottom:14px" id="dash-stats">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- LEGEND -->
+  <div class="grp-legend">
+    <strong style="color:var(--text2);font-size:11px">Группы ХТ:</strong>
+    <div class="gl-item"><span class="b bb">гр.1.1</span><span style="color:var(--text2)">МЛУ ТБ — Bq+Lfx+Dlm+Cfz</span></div>
+    <div class="gl-item"><span class="b bp">гр.1.2</span><span style="color:var(--text2)">МЛУ ТБ — Bq+Lzd+Lfx/Mfx+Cfz</span></div>
+    <div class="gl-item"><span class="b bg">гр.1.3</span><span style="color:var(--text2)">МЛУ ТБ — Bq+Lzd+Lfx+Cfz±Cs</span></div>
+    <div class="gl-item"><span class="b bo">гр.1.4</span><span style="color:var(--text2)">пре-ШЛУ ТБ</span></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <!-- OG DASHBOARD -->
+    <div>
+      <div class="section-break"><div class="section-break-title">🔬 Основная группа (ОГ)</div><div class="section-break-line"></div><span class="b bb">I–II группы</span></div>
+      <div class="g2" style="margin-bottom:10px" id="og-stats-mini"><!-- JS --></div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">📍</span><span class="card-title">Набор по регионам (ОГ)</span></div>
+        <div id="og-region-bars"><!-- JS --></div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-h"><span class="card-icon">🎯</span><span class="card-title">Прогресс набора</span></div>
+        <div class="pr"><div class="pr-label">Цель I–III гр. (118)</div><div class="pr-bg"><div class="pr-fill" id="pr-og" style="background:var(--blue)"></div></div><div class="pr-num" id="pr-og-txt"></div></div>
+        <div class="pr"><div class="pr-label">Цель IV гр. (370)</div><div class="pr-bg"><div class="pr-fill" id="pr-kg" style="background:var(--green)"></div></div><div class="pr-num" id="pr-kg-txt"></div></div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-h"><span class="card-icon">🚩</span><span class="card-title">Активные флаги</span></div>
+        <div id="flags-block"><!-- JS --></div>
+      </div>
+    </div>
+
+    <!-- KG DASHBOARD -->
+    <div>
+      <div class="section-break"><div class="section-break-title">🏥 Контрольная группа (КГ)</div><div class="section-break-line"></div><span class="b bg">IV группа</span></div>
+      <div class="g2" style="margin-bottom:10px" id="kg-stats-mini"><!-- JS --></div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">📊</span><span class="card-title">Исходы КГ (n=45 с данными ХТ)</span></div>
+        <div class="pr"><div class="pr-label">Эффективный</div><div class="pr-bg"><div class="pr-fill" style="width:97.8%;background:var(--green)"></div></div><div class="pr-num">44 (97.8%)</div></div>
+        <div class="pr"><div class="pr-label">Неэффективный</div><div class="pr-bg"><div class="pr-fill" style="width:2.2%;background:var(--red)"></div></div><div class="pr-num">1 (2.2%)</div></div>
+        <div class="pr"><div class="pr-label">Нет данных ХТ</div><div class="pr-bg"><div class="pr-fill" style="width:25%;background:var(--text3)"></div></div><div class="pr-num">15 чел.</div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Средняя длительность ХТ: <b>20.4 мес.</b> (диапазон 16–28 мес.)</div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-h"><span class="card-icon">⚖</span><span class="card-title">Сравнение ОГ / КГ — ключевые параметры</span></div>
+        <table class="cmp">
+          <thead style="background:var(--surface2)">
+            <tr><th style="color:var(--text2)">Показатель</th><th style="color:var(--blue)">ОГ</th><th style="color:var(--green)">КГ</th><th style="color:var(--text2)">p</th></tr>
+          </thead>
+          <tbody id="cmp-table-body"><!-- JS --></tbody>
+        </table>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-h"><span class="card-icon">📅</span><span class="card-title">Хронология исследования</span></div>
+        <div class="tl">
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-date">09.2024 – 02.2025</div><div style="font-size:12.5px">Обзор литературы, создание БД, набор КГ</div></div>
+          <div class="tl-item"><div class="tl-dot done"></div><div class="tl-date">07.2025 – 01.2026</div><div style="font-size:12.5px">Первые включения ОГ (Воронеж, Астрахань, Кемерово, НМИЦ)</div></div>
+          <div class="tl-item"><div class="tl-dot now"></div><div class="tl-date">02.2025 – 02.2026 <span class="b bb" style="font-size:10px">Активно</span></div><div style="font-size:12.5px">Мониторинг I–II групп. Подключение регионов.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">01.2026 – 12.2026</div><div style="font-size:12.5px">Анализ результатов. Публикации. РИД.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">01.2027 – 08.2027</div><div style="font-size:12.5px">Написание и оформление диссертации</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-date">2027 г.</div><div style="font-size:12.5px">Защита диссертации</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card">
+    <div class="card-h"><span class="card-icon">📝</span><span class="card-title">Общие заметки по исследованию</span></div>
+    <div class="note" contenteditable="true" id="n-dash" placeholder="Заметки по дашборду…"></div>
+  </div>
+</div>
+
+<!-- ===== OG PAGE ===== -->
+<div class="page" id="page-og">
+  <div class="sh">
+    <div class="sh-title">Основная группа (ОГ)</div>
+    <span class="sh-tag" id="og-count-tag">Загрузка…</span>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <input type="text" id="og-search" placeholder="🔍 Поиск по таблице…" style="width:220px" oninput="renderOG()">
+      <button class="btn btn-p" onclick="openAddModal()">+ Добавить пациента</button>
+    </div>
+  </div>
+
+  <div class="grp-legend">
+    <strong style="color:var(--text2);font-size:11px">Группы:</strong>
+    <div class="gl-item"><span class="b bb">гр.1.1</span><span>МЛУ ТБ</span></div>
+    <div class="gl-item"><span class="b bp">гр.1.2</span><span>МЛУ ТБ</span></div>
+    <div class="gl-item"><span class="b bg">гр.1.3</span><span>МЛУ ТБ</span></div>
+    <div class="gl-item"><span class="b bo">гр.1.4</span><span>пре-ШЛУ ТБ</span></div>
+    <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
+      <span style="font-size:11px;color:var(--text3)">КТ-точки:</span>
+      <span class="b bb" style="font-size:10px">2 мес.</span>
+      <span class="b bb" style="font-size:10px">4 мес.</span>
+      <span class="b bb" style="font-size:10px">6 мес.</span>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="fc active" onclick="setOGF(this,'all')">Все <span id="f-all-n"></span></div>
+    <div class="fc" onclick="setOGF(this,'complete')">✓ Завершены <span id="f-done-n"></span></div>
+    <div class="fc" onclick="setOGF(this,'active')">В процессе <span id="f-act-n"></span></div>
+    <div class="fc" onclick="setOGF(this,'excluded')">Исключены <span id="f-ex-n"></span></div>
+    <div class="fc" onclick="setOGF(this,'kemer')">Кемерово</div>
+    <div class="fc" onclick="setOGF(this,'vor')">Воронеж</div>
+    <div class="fc" onclick="setOGF(this,'astr')">Астрахань</div>
+    <div class="fc" onclick="setOGF(this,'nmits')">НМИЦ ФПИ</div>
+    <div class="fc" onclick="setOGF(this,'oren')">Оренбург</div>
+    <div class="fc" onclick="setOGF(this,'nnov')">Нижегород.</div>
+    <div class="fc" onclick="setOGF(this,'other')">Прочие</div>
+  </div>
+
+  <div class="tw">
+    <table id="og-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Регион</th><th>Дата В/в ЛУ</th><th>Возраст/Пол</th>
+          <th>Форма ТБ / Локализация</th><th>Схема ХТ</th><th>Группа</th>
+          <th>Дозы</th><th>Контр. точка</th><th>Статус</th><th>МБТ</th>
+          <th>НЯ</th><th>Врач</th><th>Примечание</th>
+        </tr>
+      </thead>
+      <tbody id="og-tbody"><!-- JS --></tbody>
+    </table>
+  </div>
+  <div style="margin-top:8px;font-size:11px;color:var(--text3)" id="og-footer-stat"></div>
+</div>
+
+<!-- ===== KG PAGE ===== -->
+<div class="page" id="page-kg">
+  <div class="sh">
+    <div class="sh-title">Контрольная группа (КГ) — IV группа</div>
+    <span class="sh-tag">60 пациентов · ретроспективная · НМИЦ ФПИ</span>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <input type="text" id="kg-search" placeholder="🔍 Поиск…" style="width:200px" oninput="renderKG()">
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="sc c-green"><div class="sc-val">60</div><div class="sc-label">Всего пациентов</div></div>
+    <div class="sc c-blue"><div class="sc-val">97.8%</div><div class="sc-label">Эффективность</div><div class="sc-sub">44/45 с данными ХТ</div></div>
+    <div class="sc c-navy"><div class="sc-val">20.4 мес</div><div class="sc-label">Ср. длительность ХТ</div><div class="sc-sub">Диапазон 16–28 мес.</div></div>
+    <div class="sc c-orange"><div class="sc-val">15</div><div class="sc-label">Без данных ХТ</div><div class="sc-sub">Уточнить в ФРБТ</div></div>
+  </div>
+  <div class="filter-bar">
+    <div class="fc active" onclick="setKGF(this,'all')">Все (60)</div>
+    <div class="fc" onclick="setKGF(this,'ok')">Эффективный (44)</div>
+    <div class="fc" onclick="setKGF(this,'fail')">Неэффективный (1)</div>
+    <div class="fc" onclick="setKGF(this,'nd')">Нет данных (15)</div>
+  </div>
+  <div class="tw"><table><thead><tr>
+    <th>#</th><th>Инициалы</th><th>Код</th><th>Возраст</th><th>Пол</th>
+    <th>Форма ТБ</th><th>Локализация</th><th>ХТ мес.</th><th>Исход</th><th>Статус</th><th>Примечание</th>
+  </tr></thead><tbody id="kg-tbody"><!-- JS --></tbody></table></div>
+  <div style="margin-top:8px;padding:10px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;font-size:12px;color:#854d0e">
+    ⚠ 15 пациентов без данных результатов ХТ (уточнить в ФРБТ). Включены в расчёт IV группы (целевой набор: 370 чел.).
+  </div>
+</div>
+
+<!-- ===== ANALYTICS PAGE ===== -->
+<div class="page" id="page-anal">
+  <div class="sh"><div class="sh-title">Аналитика</div></div>
+  <div class="atabs">
+    <div class="atab active" onclick="setATab(this,'at-og')">ОГ — Основная группа</div>
+    <div class="atab" onclick="setATab(this,'at-kg')">КГ — Контрольная группа</div>
+    <div class="atab" onclick="setATab(this,'at-cmp')">Сравнение ОГ / КГ</div>
+    <div class="atab" onclick="setATab(this,'at-ae')">Нежелательные явления</div>
+  </div>
+
+  <!-- OG ANALYTICS -->
+  <div class="atab-content active" id="at-og">
+    <div class="g3" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><span class="card-icon">👥</span><span class="card-title">Состав ОГ</span></div>
+        <div id="og-anal-composition"><!-- JS --></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">📋</span><span class="card-title">Группы ХТ (ОГ)</span></div>
+        <div id="og-anal-grps"><!-- JS --></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">🫁</span><span class="card-title">Формы ТБ (ОГ)</span></div>
+        <div id="og-anal-forms"><!-- JS --></div>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><span class="card-icon">🧫</span><span class="card-title">МБТ-конверсия по месяцам (ОГ)</span></div>
+        <div class="tw" style="border:none;box-shadow:none">
+          <table><thead><tr><th>Месяц</th><th>Исследовано</th><th>МБТ(-)</th><th>Конверсия</th></tr></thead>
+          <tbody>
+            <tr><td>0 (исходно)</td><td>42</td><td>6</td><td><span class="b br">14.3%</span></td></tr>
+            <tr><td>1 мес.</td><td>36</td><td>29</td><td><span class="b bo">80.6%</span></td></tr>
+            <tr><td>2 мес.</td><td>32</td><td>28</td><td><span class="b by">87.5%</span></td></tr>
+            <tr><td>3 мес.</td><td>26</td><td>24</td><td><span class="b by">92.3%</span></td></tr>
+            <tr><td>4 мес.</td><td>20</td><td>19</td><td><span class="b bg">95.0%</span></td></tr>
+            <tr><td>5 мес.</td><td>10</td><td>10</td><td><span class="b bg">100%</span></td></tr>
+            <tr><td>6 мес. (завершившие)</td><td>7</td><td>7</td><td><span class="b bg">100%</span></td></tr>
+          </tbody>
+          </table>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">Предварительные данные. Полный анализ — по завершении набора I–III групп (целевой n=118).</div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">💊</span><span class="card-title">ЛЧ МБТ (спектр устойчивости — ОГ)</span></div>
+        <div class="pr"><div class="pr-label">H (изониазид)</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--red)"></div></div><div class="pr-num">100%</div></div>
+        <div class="pr"><div class="pr-label">R (рифампицин)</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--red)"></div></div><div class="pr-num">100%</div></div>
+        <div class="pr"><div class="pr-label">E (этамбутол)</div><div class="pr-bg"><div class="pr-fill" style="width:55%;background:var(--orange)"></div></div><div class="pr-num">~55%</div></div>
+        <div class="pr"><div class="pr-label">S (стрептомицин)</div><div class="pr-bg"><div class="pr-fill" style="width:40%;background:var(--yellow)"></div></div><div class="pr-num">~40%</div></div>
+        <div class="pr"><div class="pr-label">Am (амикацин)</div><div class="pr-bg"><div class="pr-fill" style="width:12%;background:var(--purple)"></div></div><div class="pr-num">~12%</div></div>
+        <div class="pr"><div class="pr-label">Bq — чувствит.</div><div class="pr-bg"><div class="pr-fill" style="width:98%;background:var(--green)"></div></div><div class="pr-num">~98%</div></div>
+        <div class="pr"><div class="pr-label">Fq — чувствит.</div><div class="pr-bg"><div class="pr-fill" style="width:85%;background:var(--green)"></div></div><div class="pr-num">~85%</div></div>
+      </div>
+    </div>
+    <!-- TLC BACTOGRAM PER PATIENT -->
+    <div class="card">
+      <div class="card-h"><span class="card-icon">🔬</span><span class="card-title">Бактериограмма / ТЛЧ в динамике по пациентам</span></div>
+      <div class="tw" style="border:none;box-shadow:none;margin-top:0">
+        <table id="tlc-table">
+          <thead><tr>
+            <th>Пациент</th><th>Регион</th><th>Дата исх. ТЛЧ</th>
+            <th title="Рифампицин">R</th><th title="Изониазид">H</th><th title="Этамбутол">E</th>
+            <th title="Стрептомицин">S</th><th title="Амикацин">Am</th><th title="Канамицин">Km</th>
+            <th title="Левофлоксацин">Lfx</th><th title="Моксифлоксацин">Mfx</th>
+            <th title="Бедаквилин">Bq</th><th title="Линезолид">Lzd</th>
+            <th title="Клофазимин">Cfz</th><th title="Деламанид">Dlm</th>
+            <th>Дата ТЛЧ №2</th><th>Изменения ЛЧ</th><th>Примечание</th>
+          </tr></thead>
+          <tbody id="tlc-tbody">
+            <tr><td><b>П-01 (КМ)</b></td><td>Кемерово</td>
+              <td><span contenteditable="true" placeholder="дата">18.02.2025</span></td>
+              <td><span class="b br">У</span></td><td><span class="b br">У</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span contenteditable="true" placeholder="—">—</span></td>
+              <td><div class="note" contenteditable="true">МЛУ (HR)</div></td>
+              <td><div class="note" contenteditable="true">QTc мониторинг, бисопролол</div></td>
+            </tr>
+            <tr><td><b>3 АСТ</b></td><td>Астрахань</td>
+              <td><span contenteditable="true">25.07.2025</span></td>
+              <td><span class="b br">У</span></td><td><span class="b br">У</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b br">У</span></td><td><span class="b br">У</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span contenteditable="true">—</span></td>
+              <td><div class="note" contenteditable="true">пре-ШЛУ (HR+Am+Km)</div></td>
+              <td><div class="note" contenteditable="true">Гепатотоксичность Z→Pto; ОКЛ 23.01.2026</div></td>
+            </tr>
+            <tr><td><b>КАП (ОР)</b></td><td>Оренбург</td>
+              <td><span contenteditable="true">13.03.2026</span></td>
+              <td><span class="b br">У</span></td><td><span class="b br">У</span></td><td><span class="b br">У</span></td>
+              <td><span class="b br">У</span></td><td><span class="b br">У</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span class="b bg">Ч</span></td><td><span class="b bg">Ч</span></td>
+              <td><span contenteditable="true">—</span></td>
+              <td><div class="note" contenteditable="true">МЛУ (контакт с отцом)</div></td>
+              <td><div class="note" contenteditable="true">ТМК 21.04.26, рек. гр.1.3</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-add" onclick="addTLCRow()">+ Добавить пациента</button>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-h"><span class="card-icon">🌡</span><span class="card-title">Клиническая динамика — тепловая карта НЯ по системам</span></div>
+      <div style="font-size:11.5px;color:var(--text2);margin-bottom:12px">Интенсивность: <span class="b bg">Нет</span> <span class="b by">Лёгкая (1–2)</span> <span class="b bo">Умеренная (3)</span> <span class="b br">Тяжёлая (4–5)</span></div>
+      <div id="heatmap-container"><!-- JS --></div>
+    </div>
+  </div>
+
+  <!-- KG ANALYTICS -->
+  <div class="atab-content" id="at-kg">
+    <div class="g3" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><span class="card-icon">📊</span><span class="card-title">Характеристики КГ</span></div>
+        <div class="pr"><div class="pr-label">Инфильтративный</div><div class="pr-bg"><div class="pr-fill" style="width:81.7%;background:var(--blue)"></div></div><div class="pr-num">49 (81.7%)</div></div>
+        <div class="pr"><div class="pr-label">Диссеминированный</div><div class="pr-bg"><div class="pr-fill" style="width:13.3%;background:var(--purple)"></div></div><div class="pr-num">8 (13.3%)</div></div>
+        <div class="pr"><div class="pr-label">Туберкулёма</div><div class="pr-bg"><div class="pr-fill" style="width:5%;background:var(--teal)"></div></div><div class="pr-num">3 (5.0%)</div></div>
+        <div class="pr"><div class="pr-label">Очаговый</div><div class="pr-bg"><div class="pr-fill" style="width:1.7%;background:var(--green)"></div></div><div class="pr-num">1 (1.7%)</div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">👥</span><span class="card-title">Пол и возраст КГ</span></div>
+        <div class="pr"><div class="pr-label">Мужской</div><div class="pr-bg"><div class="pr-fill" style="width:46.7%;background:var(--blue)"></div></div><div class="pr-num">28 (46.7%)</div></div>
+        <div class="pr"><div class="pr-label">Женский</div><div class="pr-bg"><div class="pr-fill" style="width:53.3%;background:#ec4899"></div></div><div class="pr-num">32 (53.3%)</div></div>
+        <div class="divider"></div>
+        <div style="font-size:12.5px">Медиана: <b>41.5 лет</b> · Ср.: <b>42.8 лет</b> · Диапазон: <b>19–69 лет</b></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">⏱</span><span class="card-title">Длительность ХТ (КГ)</span></div>
+        <div class="pr"><div class="pr-label">16 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:8%;background:var(--teal)"></div></div><div class="pr-num">4 пац.</div></div>
+        <div class="pr"><div class="pr-label">18 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:20%;background:var(--blue)"></div></div><div class="pr-num">10 пац.</div></div>
+        <div class="pr"><div class="pr-label">20 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:58%;background:var(--blue)"></div></div><div class="pr-num">29 пац.</div></div>
+        <div class="pr"><div class="pr-label">22–28 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:16%;background:var(--purple)"></div></div><div class="pr-num">8 пац.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="card-icon">💊</span><span class="card-title">Устойчивость МБТ (КГ)</span></div>
+      <div class="g2">
+        <div>
+          <div class="pr"><div class="pr-label">H (изониазид)</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--red)"></div></div><div class="pr-num">60 (100%)</div></div>
+          <div class="pr"><div class="pr-label">R (рифампицин)</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--red)"></div></div><div class="pr-num">60 (100%)</div></div>
+          <div class="pr"><div class="pr-label">E (этамбутол)</div><div class="pr-bg"><div class="pr-fill" style="width:63.3%;background:var(--orange)"></div></div><div class="pr-num">38 (63.3%)</div></div>
+          <div class="pr"><div class="pr-label">S (стрептомицин)</div><div class="pr-bg"><div class="pr-fill" style="width:41.7%;background:var(--yellow)"></div></div><div class="pr-num">25 (41.7%)</div></div>
+        </div>
+        <div>
+          <div class="pr"><div class="pr-label">Am (амикацин)</div><div class="pr-bg"><div class="pr-fill" style="width:16.7%;background:var(--purple)"></div></div><div class="pr-num">10 (16.7%)</div></div>
+          <div class="pr"><div class="pr-label">Mfx (моксифл.)</div><div class="pr-bg"><div class="pr-fill" style="width:11.7%;background:var(--orange)"></div></div><div class="pr-num">7 (11.7%)</div></div>
+          <div class="pr"><div class="pr-label">Lfx (левофл.)</div><div class="pr-bg"><div class="pr-fill" style="width:11.7%;background:var(--orange)"></div></div><div class="pr-num">7 (11.7%)</div></div>
+          <div class="pr"><div class="pr-label">Eto (этионамид)</div><div class="pr-bg"><div class="pr-fill" style="width:8.3%;background:var(--yellow)"></div></div><div class="pr-num">5 (8.3%)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="atab-content" id="at-cmp">
+    <div class="g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><span class="card-icon">⚖</span><span class="card-title">Сравнение ОГ / КГ — основные характеристики</span></div>
+        <div class="tw" style="border:none;box-shadow:none">
+          <table class="cmp">
+            <thead><tr style="background:var(--surface2)"><th>Показатель</th><th style="color:var(--blue)">ОГ (n=42)</th><th style="color:var(--green)">КГ (n=60)</th><th>Тест</th><th>p</th></tr></thead>
+            <tbody>
+              <tr><td>Возраст (лет), M±σ</td><td style="color:var(--blue);font-weight:600">42.1±11.2</td><td style="color:var(--green);font-weight:600">42.8±15.3</td><td>t-тест</td><td class="p-ns">0.82</td></tr>
+              <tr><td>Мужской пол, %</td><td style="color:var(--blue);font-weight:600">83.3%</td><td style="color:var(--green);font-weight:600">46.7%</td><td>χ²</td><td class="p-sig">0.001</td></tr>
+              <tr><td>Инфильтративный ТБ, %</td><td style="color:var(--blue);font-weight:600">76.2%</td><td style="color:var(--green);font-weight:600">81.7%</td><td>χ²</td><td class="p-ns">0.42</td></tr>
+              <tr><td>Диссеминированный, %</td><td style="color:var(--blue);font-weight:600">7.1%</td><td style="color:var(--green);font-weight:600">13.3%</td><td>χ²</td><td class="p-ns">0.29</td></tr>
+              <tr><td>МБТ(+) при поступлении, %</td><td style="color:var(--blue);font-weight:600">83.3%</td><td style="color:var(--green);font-weight:600">91.7%</td><td>χ²</td><td class="p-ns">0.27</td></tr>
+              <tr><td>Длительность ХТ (мес.)</td><td style="color:var(--blue);font-weight:600">6</td><td style="color:var(--green);font-weight:600">20.4±3.1</td><td>Манна–Уитни</td><td class="p-sig">&lt;0.001</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">sig=p&lt;0.05; ns=p≥0.05. M±σ=среднее±стандартное отклонение.</div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">🎯</span><span class="card-title">Эффективность лечения (основной исход)</span></div>
+        <div class="flag f-b"><div class="fi">ℹ</div><div style="font-size:12px"><b>Корректный расчёт эффективности ОГ:</b><br>Из 42 включённых: 8 исключены → в анализе 34 пациента.<br>Завершили лечение и оценены: <b>7 пациентов</b>.<br>Эффективный исход: <b>7/7 = 100%</b> (все завершившие).<br>В процессе лечения: <b>27 пациентов</b> (итоговый анализ после набора).</div></div>
+        <div class="tw" style="border:none;box-shadow:none">
+          <table class="cmp">
+            <thead><tr style="background:var(--surface2)"><th>Исход</th><th style="color:var(--blue)">ОГ (n=7 оценённых)</th><th style="color:var(--green)">КГ (n=45 с данными)</th><th>Тест Фишера</th></tr></thead>
+            <tbody>
+              <tr><td>Эффективный</td><td style="color:var(--green);font-weight:700">7 (100%)</td><td style="color:var(--green);font-weight:700">44 (97.8%)</td><td rowspan="2" style="vertical-align:middle" class="p-ns">p=1.0 †</td></tr>
+              <tr><td>Неэффективный</td><td style="color:var(--text3)">0</td><td style="color:var(--red);font-weight:700">1 (2.2%)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">† Точный тест Фишера (двусторонний). Предварительные данные.</div>
+        <div class="divider"></div>
+        <!-- CALCULATOR -->
+        <div class="card-h"><span class="card-icon">🧮</span><span class="card-title">Калькулятор χ² (2×2)</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">ОГ — Событие (a)</div><input type="number" id="c-a" value="7" style="width:100%"></div>
+          <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">КГ — Событие (b)</div><input type="number" id="c-b" value="44" style="width:100%"></div>
+          <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">ОГ — Нет события (c)</div><input type="number" id="c-c" value="0" style="width:100%"></div>
+          <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">КГ — Нет события (d)</div><input type="number" id="c-d" value="1" style="width:100%"></div>
+        </div>
+        <button class="btn btn-p" onclick="calcChi2()" style="width:100%">Рассчитать χ²</button>
+        <div id="chi2-result" style="display:none;margin-top:10px;padding:10px;background:var(--surface2);border-radius:6px;border:1px solid var(--border);font-size:12.5px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AE ANALYTICS -->
+  <div class="atab-content" id="at-ae">
+    <div class="g2" style="margin-bottom:14px">
+      <div class="card">
+        <div class="card-h"><span class="card-icon">⚠</span><span class="card-title">Нежелательные явления (ОГ)</span></div>
+        <div class="tw" style="border:none;box-shadow:none">
+          <table><thead><tr><th>Пациент</th><th>Регион</th><th>Вид НЯ</th><th>Степень</th><th>Препарат</th><th>Исход</th><th>Принятые меры</th></tr></thead>
+          <tbody>
+            <tr class="tr-warn"><td>П-01</td><td>Кемерово</td><td>Удлинение QTc (макс.480мс)</td><td><span class="b by">1–2</span></td><td>Bq±Cfz</td><td><span class="b bg">Купировано</span></td><td><span contenteditable="true">Бисопролол, мониторинг</span></td></tr>
+            <tr class="tr-warn"><td>3 АСТ</td><td>Астрахань</td><td>Гепатотоксичность</td><td><span class="b bo">3</span></td><td>Z</td><td><span class="b bg">Замена препарата</span></td><td><span contenteditable="true">Z→Pto, адеметионин, ремаксол</span></td></tr>
+            <tr class="tr-warn"><td>П-05</td><td>Кемерово</td><td>Нарастание инфильтрации</td><td><span class="b br">—</span></td><td>Bq+Lzd</td><td><span class="b by">Уточняется</span></td><td><span contenteditable="true">Консультация хирурга 14.04.26</span></td></tr>
+          </tbody>
+          </table>
+        </div>
+        <button class="btn-add" onclick="addAERow()">+ Добавить НЯ</button>
+      </div>
+      <div class="card">
+        <div class="card-h"><span class="card-icon">📋</span><span class="card-title">ЭКГ мониторинг (QTcF)</span></div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Порог исключения: QTcF ≥ 500 мс. Случаев превышения не зафиксировано.</div>
+        <div class="tw" style="border:none;box-shadow:none">
+          <table><thead><tr><th>Пациент</th><th>Исх. QTc (мс)</th><th>Макс. QTc (мс)</th><th>Действие</th></tr></thead>
+          <tbody>
+            <tr><td>П-01</td><td>427</td><td>480</td><td><span class="b by">Бисопролол</span></td></tr>
+            <tr><td>П-03</td><td>399</td><td>450</td><td><span class="b bg">Наблюдение</span></td></tr>
+            <tr><td>9ЖВВ</td><td>340</td><td>432</td><td><span class="b bg">Норма</span></td></tr>
+            <tr><td>3 АСТ</td><td>420</td><td>430</td><td><span class="b bg">Норма</span></td></tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="note" contenteditable="true" style="margin-top:8px">Все пациенты ОГ: QTcF &lt;500 мс на протяжении всего лечения.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CT / CLINICAL ===== -->
+<div class="page" id="page-ct">
+  <div class="sh"><div class="sh-title">КТ-динамика и клинические данные</div></div>
+
+  <!-- П-05 FLAG -->
+  <div class="flag f-r" style="margin-bottom:12px">
+    <div class="fi">⚠️</div>
+    <div>
+      <b>П-05 (Кемерово) — ТРЕБУЕТ СРОЧНОГО РЕШЕНИЯ:</b> Рентгенолог зафиксировал нарастание инфильтрации на 5-м месяце лечения (апрель 2026). Консультация торакального хирурга 14.04.2026. Планируется госпитализация в НМИЦ ФПИ для хирургического лечения.<br>
+      <div style="margin-top:6px;padding:8px;background:#fff1f2;border-radius:5px;border:1px solid #fecaca;font-size:12px">
+        <b>⚖ Анализ: нужна ли операция / не снимать с исследования?</b><br>
+        МБТ-статус П-05: уточнить (если МБТ(-) — критерий неэффективности не выполнен, нарастание м.б. парадоксальной реакцией на лечение).<br>
+        <b>Критерии невключения (протокол)</b> прямо указывают: «<i>пациенты, которым планируется лечебное хирургическое вмешательство во время исследования</i>» → формально — критерий исключения.<br>
+        <b>Рекомендация:</b> 1) Срочно уточнить МБТ-статус посева (5 мес.); 2) Если МБТ(-) — рассмотреть парадоксальную реакцию (IRIS), хирургия не требуется; 3) Если МБТ(+) → рассмотреть исключение из исследования; 4) Вынести на ТМК/ЦВКК НМИЦ ФПИ до госпитализации.
+      </div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-h"><span class="card-icon">🫁</span><span class="card-title">КТ-динамика (завершившие, n=7)</span></div>
+      <div class="tw" style="border:none;box-shadow:none">
+        <table><thead><tr><th>Пациент</th><th>Регион</th><th>Исходно</th><th>2 мес.</th><th>4 мес.</th><th>6 мес.</th><th>Итог</th></tr></thead>
+        <tbody>
+          <tr class="tr-ok"><td><b>П-01</b></td><td>Кемерово</td><td><span class="b br" style="font-size:10px">Cv+Инф</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Cv закрылась</span></td><td><span class="b bg" style="font-size:10px">Закрылась</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>1САА</b></td><td>Воронеж</td><td><span class="b br" style="font-size:10px">Cv+Инф</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>2РСВ</b></td><td>Воронеж</td><td><span class="b br" style="font-size:10px">Cv+Инф</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>6КАА</b></td><td>Воронеж</td><td><span class="b br" style="font-size:10px">Cv+Инф</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Cv закрылась</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>1 АСТ</b></td><td>Астрахань</td><td><span class="b br" style="font-size:10px">Туберкулома</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>3 АСТ</b></td><td>Астрахань</td><td><span class="b br" style="font-size:10px">Инф.</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+          <tr class="tr-ok"><td><b>4 АСТ</b></td><td>Астрахань</td><td><span class="b br" style="font-size:10px">Cv+Инф</span></td><td><span class="b by" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg" style="font-size:10px">Уменьш.</span></td><td><span class="b bg">✓ Эфф.</span></td></tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="card-icon">📡</span><span class="card-title">QTcF мониторинг (ЭКГ)</span></div>
+      <div class="tw" style="border:none;box-shadow:none">
+        <table><thead><tr><th>Пациент</th><th>Исх. мс</th><th>1 мес.</th><th>2 мес.</th><th>3 мес.</th><th>Макс.</th><th>Статус</th></tr></thead>
+        <tbody>
+          <tr><td>П-01</td><td>427</td><td>460</td><td>448</td><td>480</td><td><b>480</b></td><td><span class="b by">Бисопролол</span></td></tr>
+          <tr><td>П-03</td><td>399</td><td>420</td><td>450</td><td>440</td><td><b>450</b></td><td><span class="b bg">Наблюдение</span></td></tr>
+          <tr><td>9ЖВВ</td><td>340</td><td>390</td><td>432</td><td>—</td><td><b>432</b></td><td><span class="b bg">Норма</span></td></tr>
+          <tr><td>3 АСТ</td><td>420</td><td>430</td><td>425</td><td>428</td><td><b>430</b></td><td><span class="b bg">Норма</span></td></tr>
+          <tr><td>4 АСТ</td><td>400</td><td>410</td><td>415</td><td>408</td><td><b>415</b></td><td><span class="b bg">Норма</span></td></tr>
+        </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">Порог исключения: QTcF ≥ 500 мс. Все значения в допустимом диапазоне.</div>
+    </div>
+  </div>
+
+  <!-- CT JOURNAL WITH IMAGE UPLOAD -->
+  <div class="card">
+    <div class="card-h"><span class="card-icon">🖼</span><span class="card-title">КТ ОГК в динамике — загрузка снимков и описания</span></div>
+    <div id="ct-journal"><!-- JS renders patient CT cards --></div>
+    <button class="btn-add" onclick="addCTCard()">+ Добавить пациента / КТ-запись</button>
+  </div>
+</div>
+
+<!-- ===== MICROBIOLOGY ===== -->
+<div class="page" id="page-micro">
+  <div class="sh"><div class="sh-title">Микробиология и микроскопия</div></div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="sc c-green"><div class="sc-val">~87%</div><div class="sc-label">Конверсия 2 мес. (ОГ)</div><div class="sc-sub">Предварительно</div></div>
+    <div class="sc c-blue"><div class="sc-val">100%</div><div class="sc-label">Конверсия к 6 мес.</div><div class="sc-sub">Завершившие (n=7)</div></div>
+    <div class="sc c-navy"><div class="sc-val">н/д</div><div class="sc-label">Конверсия КГ</div><div class="sc-sub">Данные в ФРБТ</div></div>
+    <div class="sc c-orange"><div class="sc-val">1</div><div class="sc-label">Контаминация</div><div class="sc-sub">П-01 мес.2 (исключена)</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-h"><span class="card-icon">🧫</span><span class="card-title">Журнал МБТ-мониторинга ОГ</span></div>
+      <div class="tw" style="border:none;box-shadow:none">
+        <table id="micro-table">
+          <thead><tr><th>Пациент</th><th>Регион</th><th>Исх. Мазок</th><th>Исх. Посев ЖПС</th><th>ПЦР</th><th>1 мес.</th><th>2 мес.</th><th>3 мес.</th><th>4 мес.</th><th>5 мес.</th><th>6 мес.</th><th>Итог</th></tr></thead>
+          <tbody id="micro-tbody">
+            <tr class="tr-ok"><td><b>П-01</b></td><td>Кемерово</td><td>3+</td><td>+(1+)</td><td>ДНК(+)</td>
+              <td><span class="b bg">−</span></td><td><span class="b bgy">контам.</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв. 1 мес.</span></td></tr>
+            <tr class="tr-ok"><td><b>1 АСТ</b></td><td>Астрахань</td><td>—</td><td>+</td><td>ДНК(+)</td>
+              <td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв. 1 мес.</span></td></tr>
+            <tr class="tr-ok"><td><b>3 АСТ</b></td><td>Астрахань</td><td>пол.</td><td>+(1+)</td><td>ДНК(+)</td>
+              <td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв. 1 мес.</span></td></tr>
+            <tr class="tr-ok"><td><b>4 АСТ</b></td><td>Астрахань</td><td>—</td><td>да</td><td>—</td>
+              <td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв.</span></td></tr>
+            <tr class="tr-ok"><td><b>1САА</b></td><td>Воронеж</td><td>КУМ(−)</td><td>+(1+)</td><td>ДНК(+)</td>
+              <td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв. 1 мес.</span></td></tr>
+            <tr class="tr-ok"><td><b>6КАА</b></td><td>Воронеж</td><td>КУМ(+)</td><td>+(1+)</td><td>ДНК(+)</td>
+              <td><span class="b by">+(1мес)</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td><td><span class="b bg">−</span></td>
+              <td><span class="b bg">Конв. 2 мес.</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-add" onclick="addMicroRow()">+ Добавить запись</button>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="card-icon">📈</span><span class="card-title">Конверсия посева по месяцам (ОГ)</span></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">Исходно (МБТ−)</div><div class="pr-bg"><div class="pr-fill" style="width:14.3%;background:var(--red)"></div></div><div class="pr-num">14.3%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">1 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:80.6%;background:var(--orange)"></div></div><div class="pr-num">80.6%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">2 мес. (КТ-2)</div><div class="pr-bg"><div class="pr-fill" style="width:87.5%;background:var(--yellow)"></div></div><div class="pr-num">87.5%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">3 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:92.3%;background:#65a30d"></div></div><div class="pr-num">92.3%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">4 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:95%;background:var(--green)"></div></div><div class="pr-num">95.0%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">5 мес.</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--green)"></div></div><div class="pr-num">100%</div></div>
+      <div class="pr"><div class="pr-label" style="min-width:100px">6 мес. (завер.)</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--green)"></div></div><div class="pr-num">100% (n=7)</div></div>
+      <div class="divider"></div>
+      <div class="note" contenteditable="true" placeholder="Примечание по МБТ-мониторингу…">Предварительные данные ОГ. Контаминация П-01 (2 мес.) — не учитывается. Итоговый анализ при n=118.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLATFORM ===== -->
+<div class="page" id="page-plat">
+  <div class="sh"><div class="sh-title">Интерактивная платформа «ТубоМед»</div><span class="sh-tag">7 пациентов</span></div>
+  <div class="g4" style="margin-bottom:14px">
+    <div class="sc c-blue"><div class="sc-val">7</div><div class="sc-label">В системе</div></div>
+    <div class="sc c-green"><div class="sc-val">6</div><div class="sc-label">Активных</div></div>
+    <div class="sc c-red"><div class="sc-val">1</div><div class="sc-label">Истёк абонемент</div><div class="sc-sub">Шевелёв — 28.04.26</div></div>
+    <div class="sc c-yellow"><div class="sc-val">~8.4</div><div class="sc-label">Ср. активность (сообщ.)</div></div>
+  </div>
+  <div class="flag f-r" style="margin-bottom:10px"><div class="fi">⚠️</div><div><b>КРИТИЧНО:</b> Шевелёв Н.С. — абонемент истёк <b>28.04.2026</b>. Срочно продлить или уточнить статус участия.</div></div>
+  <div class="flag f-b" style="margin-bottom:14px"><div class="fi">📋</div><div><b>К добавлению (через программиста Надю):</b> Опросник КОАп-25 + Опросник обратной связи о приложении. Интегрировать в модуль аналитики комплаенса.</div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:16px" id="plat-cards"><!-- JS --></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-h"><span class="card-icon">📊</span><span class="card-title">Статистика приверженности</span></div>
+      <div class="tw" style="border:none;box-shadow:none">
+        <table><thead><tr><th>Пациент</th><th>От врача</th><th>От пациента</th><th>Активность</th></tr></thead>
+        <tbody>
+          <tr><td>Жучкова Д.С.</td><td>12</td><td>11</td><td><span class="b bg">Высокая</span></td></tr>
+          <tr><td>Кочетков Д.С.</td><td>12</td><td>19</td><td><span class="b bg">Высокая</span></td></tr>
+          <tr><td>Федотова С.В.</td><td>9</td><td>11</td><td><span class="b bg">Хорошая</span></td></tr>
+          <tr><td>Поляков И.М.</td><td>7</td><td>9</td><td><span class="b by">Умеренная</span></td></tr>
+          <tr><td>Стёпина Т.А.</td><td>5</td><td>3</td><td><span class="b by">Умеренная</span></td></tr>
+          <tr><td>Шевелёв Н.С.</td><td>5</td><td>2</td><td><span class="b br">Низкая ⚠</span></td></tr>
+          <tr><td>Дроздов А.И.</td><td>3</td><td>7</td><td><span class="b by">Умеренная</span></td></tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="card-icon">📋</span><span class="card-title">Задачи по платформе (→ Наде)</span></div>
+      <div id="plat-tasks"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="text" id="pt-in" placeholder="Новая задача…">
+        <button class="btn btn-p" style="flex-shrink:0" onclick="addPlatTask()">+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REGIONS ===== -->
+<div class="page" id="page-reg">
+  <div class="sh"><div class="sh-title">Работа с регионами</div></div>
+  <div class="section-break"><div class="section-break-title">Основные регионы</div><div class="section-break-line"></div></div>
+  <div class="tw" style="margin-bottom:16px">
+    <table><thead><tr>
+      <th>Регион / Учреждение</th><th>Гл. врач</th><th>Контакт</th><th>Статус БД</th>
+      <th>Пациентов</th><th>Проблемы</th><th>Следующий шаг</th><th>Дата</th><th>Примечание</th>
+    </tr></thead>
+    <tbody id="regs-main">
+      <tr><td><b>Воронежская обл.</b><br><small style="color:var(--text3)">КУЗ «ВОКПТД им. Похвисневой»</small></td>
+        <td><span contenteditable="true">Артемов А.Н.</span></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b bg" onclick="openCtx(event,this)" style="cursor:pointer">БД 22.02.2026</span></td>
+        <td>17</td><td><div class="note" contenteditable="true">—</div></td>
+        <td><div contenteditable="true">Запрос обновл. БД</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true">3ММА — продление 60д, ТМК 23.03.26</div></td></tr>
+      <tr><td><b>Кемеровская обл.</b><br><small style="color:var(--text3)">ГБУЗ «Кузбасский КФПМЦ им. Копыловой»</small></td>
+        <td><span contenteditable="true">Сибиль К.В.</span></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b bg" onclick="openCtx(event,this)" style="cursor:pointer">БД 03.10.2025</span></td>
+        <td>6</td><td><div class="note" contenteditable="true">П-05 — нарастание инфильтр., хирург 14.04.26 ⚠</div></td>
+        <td><div contenteditable="true">Запрос обновл. БД 20.04.26</div></td>
+        <td><span contenteditable="true">20.04.2026</span></td>
+        <td><div class="note" contenteditable="true">П-01 завершён ✓</div></td></tr>
+      <tr><td><b>Астраханская обл.</b><br><small style="color:var(--text3)">ГБУЗ «Областной КПД»</small></td>
+        <td><span contenteditable="true">—</span></td><td><span contenteditable="true">Цымбал, Корчунова</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">БД 22.01.2026</span></td>
+        <td>5</td><td><div class="note" contenteditable="true">Пациент 2 — перевод схемы</div></td>
+        <td><div contenteditable="true">Запрос обновл. БД 20.04.26</div></td>
+        <td><span contenteditable="true">20.04.2026</span></td>
+        <td><div class="note" contenteditable="true">1,3,4 завершены ✓</div></td></tr>
+      <tr><td><b>Оренбургская обл.</b></td>
+        <td><span contenteditable="true">—</span></td><td><span contenteditable="true">Фатхутдинова Ю.М.</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">3 пациента</span></td>
+        <td>3</td><td><div class="note" contenteditable="true">КАП — ТМК 21.04.26, рек. гр.1.3</div></td>
+        <td><div contenteditable="true">Запрос БД. ТМК по КАП.</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true">КАП (Колыванов, 21л, очаг. S2 МБТ−) рек. включение</div></td></tr>
+      <tr><td><b>Краснодарская обл.</b><br><small style="color:var(--text3)">ГБУЗ «Клинический ПТД»</small></td>
+        <td><span contenteditable="true">Шевченко А.И.</span></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">1–2 пациента</span></td>
+        <td>1–2</td><td><div class="note" contenteditable="true">—</div></td>
+        <td><div contenteditable="true">Уточнить по пациентам</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true"></div></td></tr>
+      <tr><td><b>Нижегородская обл.</b><br><small style="color:var(--text3)">ГБУЗ «Нижегородский КЦФ»</small></td>
+        <td><span contenteditable="true">Бородина Н.Ю.</span></td><td><span contenteditable="true">Борисова С.Б. 8(831)234-05-45</span></td>
+        <td><span class="b bg" onclick="openCtx(event,this)" style="cursor:pointer">В работе ✓</span></td>
+        <td>2+КЕД</td><td><div class="note" contenteditable="true">—</div></td>
+        <td><div contenteditable="true">Запрос БД</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true">КЕД включён 13.04.26</div></td></tr>
+      <tr><td><b>Ленинградская обл.</b><br><small style="color:var(--text3)">ГБУЗ «Ленинградский областной ПТД»</small></td>
+        <td><span contenteditable="true">Голубь Н.В.</span></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">1 пациент</span></td>
+        <td>1</td><td><div class="note" contenteditable="true">—</div></td>
+        <td><div contenteditable="true">Запрос БД</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true"></div></td></tr>
+      <tr><td><b>Сахалин</b></td>
+        <td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">+1 пациент</span></td>
+        <td>1</td><td><div class="note" contenteditable="true">—</div></td>
+        <td><div contenteditable="true">Отправить документы</div></td>
+        <td><span contenteditable="true">—</span></td>
+        <td><div class="note" contenteditable="true"></div></td></tr>
+    </tbody></table>
+  </div>
+  <button class="btn-add" onclick="addRegRow('regs-main')">+ Добавить основной регион</button>
+
+  <div class="section-break" style="margin-top:18px"><div class="section-break-title">Дополнительные регионы</div><div class="section-break-line"></div></div>
+  <div class="tw">
+    <table><thead><tr>
+      <th>Регион</th><th>Гл. врач / Контакт</th><th>Статус</th><th>Пациентов</th><th>Проблемы</th><th>Следующий шаг</th><th>Дата</th>
+    </tr></thead>
+    <tbody id="regs-extra">
+      <tr><td><b>Курская обл.</b><br><small>ГБУЗ «Областной КПТД»</small></td><td><span contenteditable="true">Рачина Н.В. 8-910-219-11-95<br>Федосеев В.А. (4712)37-00-42</span></td>
+        <td><span class="b bg" onclick="openCtx(event,this)" style="cursor:pointer">Включились ✓</span></td>
+        <td><span contenteditable="true">+Веревкин А.В.</span></td>
+        <td><div class="note" contenteditable="true">Ожидается ТМК (отборочная) по Веревкину А.В.</div></td>
+        <td><div contenteditable="true">Контролировать ТМК Веревкина А.В. Соглашение — июнь.</div></td>
+        <td><span contenteditable="true">01.04.2026</span></td></tr>
+      <tr><td><b>Башкортостан</b></td><td><span contenteditable="true">Лилия Максатовна +7-917-808-06-99</span></td>
+        <td><span class="b bg" onclick="openCtx(event,this)" style="cursor:pointer">Утверждено ✓</span></td><td>—</td>
+        <td><div class="note" contenteditable="true">—</div></td><td><div contenteditable="true">Мониторинг набора</div></td><td>—</td></tr>
+      <tr><td><b>Челябинская обл.</b></td><td><span contenteditable="true">Лехляйдер М.В. 8(351)232-15-37</span></td>
+        <td><span class="b by" onclick="openCtx(event,this)" style="cursor:pointer">В работе (ЦВКК)</span></td><td>—</td>
+        <td><div class="note" contenteditable="true">—</div></td><td><div contenteditable="true">Звонок 06.04.26</div></td><td><span contenteditable="true">06.04.2026</span></td></tr>
+      <tr><td><b>Татарстан</b></td><td><span contenteditable="true">Никитин А.В. 399689</span></td>
+        <td><span class="b bgy" onclick="openCtx(event,this)" style="cursor:pointer">Ждём ответа</span></td><td>—</td>
+        <td><div class="note" contenteditable="true">Гл. врач в отпуске/на больничном</div></td><td><div contenteditable="true">Ожидать</div></td><td>—</td></tr>
+      <tr><td><b>Марий Эл</b></td><td><span contenteditable="true">Соколова Н.Г. 8(8362)42-05-39</span></td>
+        <td><span class="b br" onclick="openCtx(event,this)" style="cursor:pointer">ОТКАЗ</span></td><td>0</td>
+        <td><div class="note" contenteditable="true">Рост рецидивов, нет препаратов</div></td><td>—</td><td>—</td></tr>
+      <tr><td><b>Иркутск</b></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b bgy" onclick="openCtx(event,this)" style="cursor:pointer">Подготовка</span></td><td>—</td>
+        <td><div class="note" contenteditable="true">—</div></td><td><div contenteditable="true">Отправить документы</div></td><td>—</td></tr>
+      <tr><td><b>Ставропольский край</b></td><td><span contenteditable="true">—</span></td>
+        <td><span class="b bgy" onclick="openCtx(event,this)" style="cursor:pointer">Подготовка</span></td><td>—</td>
+        <td><div class="note" contenteditable="true">—</div></td><td><div contenteditable="true">Отправить документы</div></td><td>—</td></tr>
+    </tbody></table>
+  </div>
+  <button class="btn-add" onclick="addRegRow('regs-extra')">+ Добавить регион</button>
+</div>
+
+<!-- ===== TASKS ===== -->
+<div class="page" id="page-task">
+  <div class="sh"><div class="sh-title">Планер задач</div></div>
+  <div class="g3">
+    <div class="card"><div class="card-h"><span class="card-icon">📌</span><span class="card-title">Апрель 2026 — Текущий</span></div>
+      <div id="tasks-apr"></div>
+      <div style="display:flex;gap:6px;margin-top:8px"><input type="text" id="ti-apr" placeholder="Новая задача…"><button class="btn btn-p" style="flex-shrink:0;padding:6px 12px" onclick="addTask('apr')">+</button></div>
+    </div>
+    <div class="card"><div class="card-h"><span class="card-icon">📌</span><span class="card-title">Май 2026</span></div>
+      <div id="tasks-may"></div>
+      <div style="display:flex;gap:6px;margin-top:8px"><input type="text" id="ti-may" placeholder="Новая задача…"><button class="btn btn-p" style="flex-shrink:0;padding:6px 12px" onclick="addTask('may')">+</button></div>
+    </div>
+    <div class="card"><div class="card-h"><span class="card-icon">📌</span><span class="card-title">Июнь 2026</span></div>
+      <div id="tasks-jun"></div>
+      <div style="display:flex;gap:6px;margin-top:8px"><input type="text" id="ti-jun" placeholder="Новая задача…"><button class="btn btn-p" style="flex-shrink:0;padding:6px 12px" onclick="addTask('jun')">+</button></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="card-h"><span class="card-icon">📝</span><span class="card-title">Общие заметки</span></div>
+    <textarea id="notes-gen" style="min-height:100px;width:100%"></textarea>
+  </div>
+</div>
+<script>
+// ==================== DATA ====================
+let ogData = [
+  // {id, region, regionLabel, date, age, sex, form, loc, xt, grp, grpClass, doses, status, mbt, ae, doc, note, cpd}
+  // КЕМЕРОВО
+  {id:'П-01',region:'kemer',regionLabel:'Кемерово',date:'21.02.2025',age:'43',sex:'Ж',form:'Инфильтративный',loc:'S1-2 лев., распад',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.2',grpClass:'bp',doses:180,status:'complete',mbt:'МБТ(−) с 1 мес.',ae:'QTc↑ макс.480мс, бисопролол',doc:'—',note:'ЦВКК №2476, 04.09.25. III ГДН.',cp:'ЦВКК завершён'},
+  {id:'П-02',region:'kemer',regionLabel:'Кемерово',date:'07.03.2025',age:'18',sex:'М',form:'Инфильтративный',loc:'S1-2 лев., распад+обс.',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.2',grpClass:'bp',doses:180,status:'active',mbt:'МБТ(−) 2 мес.',ae:'—',doc:'—',note:'Переведён в ОТЛХ для операции',cp:'Послеоперационный контроль'},
+  {id:'П-03',region:'kemer',regionLabel:'Кемерово',date:'25.03.2025',age:'35',sex:'Ж',form:'Инфильтративный',loc:'в/д лев., распад',xt:'Bq+Dlm0,2+Lfx0,75+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:180,status:'active',mbt:'МБТ(−) 1 мес.',ae:'—',doc:'—',note:'Завершение ~окт.2025',cp:''},
+  {id:'П-04',region:'kemer',regionLabel:'Кемерово',date:'17.09.2025',age:'33',sex:'М',form:'Диссеминированный',loc:'лёгкие',xt:'Bq+Lzd0,6+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'МБТ(+) исх.',ae:'—',doc:'—',note:'МКБ, мочекаменная болезнь',cp:''},
+  {id:'П-05',region:'kemer',regionLabel:'Кемерово',date:'16.09.2025',age:'48',sex:'М',form:'Инфильтративный',loc:'S1+2 лев., распад+обс.',xt:'Bq+Lzd0,6+Lfx1,0+Cfz0,1',grp:'гр.1.2',grpClass:'bp',doses:null,status:'active',mbt:'МБТ(+) исх.',ae:'Нарастание инфильтрации (апр.2026)',doc:'—',note:'⚠ Хирург 14.04.26. Пл. госпитализация НМИЦ ФПИ. Уточнить МБТ-статус перед операцией!',cp:'⚠ ТМК до госпитализации'},
+  {id:'П-06',region:'kemer',regionLabel:'Кемерово',date:'16.09.2025',age:'45',sex:'М',form:'Плеврит лев.',loc:'',xt:'Уточняется',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'МБТ(+) исх.',ae:'—',doc:'—',note:'Гидронефроз, гепатит В',cp:''},
+  // ВОРОНЕЖ
+  {id:'1САА',region:'vor',regionLabel:'Воронеж',date:'02.06.2025',age:'24',sex:'Ж',form:'Инфильтративный',loc:'н/д лев.',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:180,status:'complete',mbt:'МБТ(−) с 1 мес.',ae:'—',doc:'Воронеж',note:'ОКЛ эффективно 01.12.2025',cp:''},
+  {id:'2РСВ',region:'vor',regionLabel:'Воронеж',date:'05.06.2025',age:'46',sex:'М',form:'Инфильтративный',loc:'прав.',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:244,status:'complete',mbt:'МБТ(−)',ae:'—',doc:'Воронеж',note:'ТМК 13.12.25→продление 60д. ОКЛ 17.03.26',cp:''},
+  {id:'3ММА',region:'vor',regionLabel:'Воронеж',date:'03.07.2025',age:'19',sex:'М',form:'Инфильтративный',loc:'прав.',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'—',ae:'—',doc:'Воронеж',note:'ТМК 23.03.26→BqDlmCfzMfxCs, продление 60д',cp:''},
+  {id:'4ГКЛ',region:'vor',regionLabel:'Воронеж',date:'16.07.2025',age:'54',sex:'М',form:'Инфильтративный',loc:'лёгкие',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:null,status:'excluded',mbt:'—',ae:'—',doc:'Воронеж',note:'ТМК 22.01.26→режим МЛУ ТБ. ДЭП-2',cp:''},
+  {id:'5ГАС',region:'vor',regionLabel:'Воронеж',date:'14.08.2025',age:'41',sex:'М',form:'Диссеминированный',loc:'лёгкие',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:null,status:'excluded',mbt:'—',ae:'—',doc:'Воронеж',note:'ТМК 27.02.26→режим МЛУ ТБ',cp:''},
+  {id:'6КАА',region:'vor',regionLabel:'Воронеж',date:'19.08.2025',age:'51',sex:'М',form:'Инфильтративный',loc:'в/д прав., распад',xt:'Lfx+Lzd0,6+Bq+Cfz',grp:'гр.1.2',grpClass:'bp',doses:180,status:'complete',mbt:'МБТ(−) с 2 мес.',ae:'—',doc:'Воронеж',note:'ОКЛ эффективно 19.02.2026. ЦВБ, гепатит С',cp:''},
+  {id:'7АСВ',region:'vor',regionLabel:'Воронеж',date:'22.08.2025',age:'53',sex:'М',form:'Инфильтративный',loc:'лёгкие',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:null,status:'excluded',mbt:'—',ae:'—',doc:'Воронеж',note:'ТМК 14.01.26→режим МЛУ ТБ',cp:''},
+  {id:'8ПАМ',region:'vor',regionLabel:'Воронеж',date:'13.10.2025',age:'38',sex:'М',form:'Инфильтративный',loc:'лев.',xt:'Mfx+Dlm+Z+Cfz+Bq',grp:'гр.1.4',grpClass:'bo',doses:null,status:'excluded',mbt:'—',ae:'Устойчивость к Z',doc:'Воронеж',note:'Устойчивость к пиразинамиду. Полиневропатия',cp:''},
+  {id:'9ЖВВ',region:'vor',regionLabel:'Воронеж',date:'07.10.2025',age:'60',sex:'М',form:'Диссеминированный',loc:'лёгкие',xt:'Lfx+Dlm+Cfz+Bq',grp:'гр.1.1',grpClass:'bb',doses:151,status:'active',mbt:'МБТ(−) 1 мес.',ae:'—',doc:'Воронеж',note:'QTc 432мс (мес.4)',cp:''},
+  {id:'10ЧЕЕ',region:'vor',regionLabel:'Воронеж',date:'17.10.2025',age:'42',sex:'М',form:'Инфильтративный',loc:'в/д прав.',xt:'Lfx+Dlm+Cfz+Bq',grp:'гр.1.1',grpClass:'bb',doses:151,status:'active',mbt:'МБТ(−) с 2 мес.',ae:'—',doc:'Воронеж',note:'МБТ(+) 1мес, МБТ(−) 2мес',cp:''},
+  {id:'11АВВ',region:'vor',regionLabel:'Воронеж',date:'16.10.2025',age:'24',sex:'М',form:'Инфильтративный',loc:'лёгкие',xt:'Lfx+Dlm+Cfz+Bq',grp:'гр.1.1',grpClass:'bb',doses:151,status:'active',mbt:'—',ae:'—',doc:'Воронеж',note:'Токсич. гепатит в анамнезе',cp:''},
+  {id:'12ИАС',region:'vor',regionLabel:'Воронеж',date:'01.11.2025',age:'34',sex:'М',form:'Инфильтративный',loc:'в/д прав.',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:121,status:'active',mbt:'ПЦР(+),мазок(−)',ae:'—',doc:'Воронеж',note:'АГ, дисфункция ВНС',cp:''},
+  {id:'13ЕСВ',region:'vor',regionLabel:'Воронеж',date:'08.12.2025',age:'43',sex:'М',form:'Инфильтративный',loc:'в/д прав.',xt:'Lfx+Dlm+Bq+Cfz',grp:'гр.1.1',grpClass:'bb',doses:91,status:'active',mbt:'—',ae:'—',doc:'Воронеж',note:'',cp:''},
+  {id:'14ВГА',region:'vor',regionLabel:'Воронеж',date:'22.01.2026',age:'65',sex:'М',form:'Инфильтративный',loc:'н/д прав.',xt:'Lfx+Dlm+Cfz+Bq',grp:'гр.1.1',grpClass:'bb',doses:61,status:'active',mbt:'—',ae:'—',doc:'Воронеж',note:'КТ 19.03.26: закрылась Cv',cp:''},
+  {id:'15ЛИИ',region:'vor',regionLabel:'Воронеж',date:'26.01.2026',age:'47',sex:'М',form:'Инфильтративный',loc:'лёгкие',xt:'Mfx+Dlm+Z+Cfz+Bq',grp:'гр.1.4',grpClass:'bo',doses:null,status:'excluded',mbt:'—',ae:'Устойчивость HRZEtMfx',doc:'Воронеж',note:'⚠ Устойч. HRZEtMfx0.25+1.0Dlm от 17.12.25',cp:''},
+  {id:'16ВДС',region:'vor',regionLabel:'Воронеж',date:'06.02.2026',age:'38',sex:'М',form:'Инфильтративный',loc:'в/д прав.',xt:'Lfx+Lzd0,6+Bq+Cfz',grp:'гр.1.2',grpClass:'bp',doses:31,status:'active',mbt:'—',ae:'—',doc:'Воронеж',note:'Хронический гастрит',cp:''},
+  {id:'17ДМВ',region:'vor',regionLabel:'Воронеж',date:'17.02.2026',age:'42',sex:'М',form:'Инфильтративный',loc:'лёгкие',xt:'Lfx+Dlm+Cfz+Bq',grp:'гр.1.1',grpClass:'bb',doses:null,status:'excluded',mbt:'—',ae:'Устойч. HREAmCmEtDlm',doc:'Воронеж',note:'⚠ Устойч. от 17.02.26',cp:''},
+  // АСТРАХАНЬ (данные из xlsx)
+  {id:'1 АСТ',region:'astr',regionLabel:'Астрахань',date:'04.07.2025',age:'21',sex:'М',form:'Туберкулома',loc:'S1S2 ОЛ',xt:'Bq+Lfx0,75→Mfx(замена)+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:180,status:'complete',mbt:'МБТ(−) исх.',ae:'Lfx→Mfx (нет в наличии)',doc:'Цымбал',note:'ОКЛ эффективный 06.02.2026. Операция резекция 24.06.25',cp:''},
+  {id:'2 АСТ',region:'astr',regionLabel:'Астрахань',date:'14.07.2025',age:'84',sex:'М',form:'Инфильтративный',loc:'S1-2 лев.',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'excluded',mbt:'МБТ(−)',ae:'—',doc:'Корчунова',note:'Перевод на другую схему (БАЛЖ−). Катаракта',cp:''},
+  {id:'3 АСТ',region:'astr',regionLabel:'Астрахань',date:'28.07.2025',age:'48',sex:'М',form:'Инфильтративный',loc:'С1-2 ОЛ',xt:'Bq+Mfx0,8+Cfz0,1+Dlm0,2+Pto0,75 (Z→Pto)',grp:'гр.1.3',grpClass:'bg',doses:180,status:'complete',mbt:'МБТ(−) с 1 мес.',ae:'Гепатотоксичность Z→Pto; холестаз мес.4',doc:'Корчунова',note:'ОКЛ эффективный 23.01.2026. пре-ШЛУ.',cp:''},
+  {id:'4 АСТ',region:'astr',regionLabel:'Астрахань',date:'28.07.2025',age:'32',sex:'М',form:'Инфильтративный',loc:'С1-2 справа',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:180,status:'complete',mbt:'МБТ(−) с 2 мес.',ae:'—',doc:'Цымбал',note:'ОКЛ эффективный 24.01.2026',cp:''},
+  {id:'5 АСТ',region:'astr',regionLabel:'Астрахань',date:'01.12.2025',age:'34',sex:'М',form:'Инфильтративный',loc:'в/д лев.',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1+Cs',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'МБТ(+) исх.',ae:'—',doc:'Цымбал',note:'',cp:''},
+  // НМИЦ ФПИ
+  {id:'Федотова С.В.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'13.02.2026',age:'42',sex:'Ж',form:'Очаговый',loc:'С6 прав., уплотнение',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Назарова Л.Д.',note:'ТубоМед ✓',cp:''},
+  {id:'Поляков И.М.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'16.03.2026',age:'42',sex:'М',form:'Туберкулёмы',loc:'в/д прав.',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Назарова Л.Д.',note:'ТубоМед ✓',cp:''},
+  {id:'Дроздов А.Ю.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'10.02.2026',age:'42',sex:'М',form:'Инфильтративный',loc:'в/д прав., распад+обс.',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Бурмистрова И.А.',note:'ТубоМед ✓',cp:''},
+  {id:'Ионова Е.С.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'10.02.2026',age:'38',sex:'Ж',form:'Туберкулёмы',loc:'',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Бурмистрова И.А.',note:'',cp:''},
+  {id:'Догадавева О.Р.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'10.02.2026',age:'51',sex:'Ж',form:'Инфильтративный',loc:'н/д прав., распад',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Бурмистрова И.А.',note:'',cp:''},
+  {id:'Жучкова Д.С.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'29.01.2025',age:'22',sex:'Ж',form:'Послеоп. (туберкулёмы)',loc:'',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Пузько А.С.',note:'ТубоМед ✓',cp:''},
+  {id:'Стёпина Т.А.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'—',age:'45',sex:'Ж',form:'—',loc:'',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1+Cs',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'Гайда А.И.',note:'НМИЦ 3ТО. ТубоМед ✓',cp:''},
+  {id:'Дадашева Х.Б.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'—',age:'—',sex:'Ж',form:'Инфильтративный',loc:'в/д лев., обсеменение',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'—',ae:'—',doc:'Ким Чер Бон',note:'',cp:''},
+  {id:'Миронова О.А.',region:'nmits',regionLabel:'НМИЦ ФПИ',date:'13.02.2026',age:'—',sex:'—',form:'—',loc:'',xt:'Bq+Lzd+Mfx400+Trz+Cfz',grp:'гр.1.3',grpClass:'bg',doses:null,status:'excluded',mbt:'—',ae:'—',doc:'Ежова Е.В.',note:'Исключена из исследования',cp:''},
+  // ОРЕНБУРГ
+  {id:'КДС',region:'oren',regionLabel:'Оренбург',date:'22.12.2025',age:'—',sex:'М',form:'Инфильтративный',loc:'S3',xt:'Bq+Cfz0,1+Lzd0,6+Lfx1,0',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+  {id:'ПАР',region:'oren',regionLabel:'Оренбург',date:'11.04.2025',age:'—',sex:'—',form:'Очаговый',loc:'',xt:'Bq+Lzd0,6+Lfx0,75+Cfz0,1+Cs',grp:'гр.1.3',grpClass:'bg',doses:180,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+  {id:'КАП (Колыванов А.П.)',region:'oren',regionLabel:'Оренбург',date:'21.04.2026',age:'21',sex:'М',form:'Очаговый',loc:'S2 прав., фаза инфильтрации',xt:'Bq+Lfx750/Mfx400+Cfz100+Lzd600 (рек.)',grp:'гр.1.3',grpClass:'bg',doses:0,status:'active',mbt:'МБТ(−). ПЦР(−)',ae:'Контроль QTc, K, альбумина',doc:'Чуркин Д.О. (ТМК 21.04.26)',note:'ТМК 21.04.26. Из контакта с отцом (МЛУ, Оренбург). Рекомендовано включение.',cp:'ТМК через 2 мес. по КТ'},
+  // ЛЕНОБЛАСТЬ
+  {id:'1 ЛО',region:'lenob',regionLabel:'Ленинградская обл.',date:'04.07.2025',age:'—',sex:'—',form:'Туберкулома',loc:'',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+  // НИЖНИЙ НОВГОРОД
+  {id:'КЕД',region:'nnov',regionLabel:'Нижний Новгород',date:'13.04.2026',age:'—',sex:'—',form:'Инфильтративный',loc:'ВДПЛ',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+  // КРАСНОДАР
+  {id:'ДКС',region:'krasn',regionLabel:'Краснодар',date:'18.12.2025',age:'—',sex:'—',form:'Очаговый',loc:'S1-2',xt:'Bq+Cfz0,1+Lzd0,6+Lfx0,75',grp:'гр.1.3',grpClass:'bg',doses:null,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+  // САХАЛИН
+  {id:'1 СХ',region:'sakhal',regionLabel:'Сахалин',date:'03.03.2026',age:'—',sex:'—',form:'Инфильтративный',loc:'ВДЛЛ',xt:'Bq+Lfx0,75+Dlm0,2+Cfz0,1',grp:'гр.1.1',grpClass:'bb',doses:null,status:'active',mbt:'—',ae:'—',doc:'—',note:'',cp:''},
+];
+
+const kgData=[
+  [1,'КАМ',37,'М','Инфильтративный','Правое',22,'ok'],[2,'ШТВ',34,'Ж','Инфильтративный','—',20,'ok'],
+  [3,'АБ',66,'Ж','Инфильтративный','Правое',22,'ok'],[4,'МДВ',42,'М','Инфильтративный','Оба',18,'ok'],
+  [5,'УГК',67,'Ж','Инфильтративный','Левое',20,'ok'],[6,'ЗАГ',28,'М','Инфильтративный','Левое',20,'ok'],
+  [7,'ААГ',29,'М','Инфильтративный','Оба',20,'ok'],[8,'ШАК',60,'М','Инфильтративный','Правое',20,'ok'],
+  [9,'ЕНА',51,'М','Диссеминированный','Оба',20,'ok'],[10,'ХИВ',62,'М','Инфильтративный','—',18,'fail'],
+  [11,'БИВ',48,'Ж','Инфильтративный','Оба',21,'ok'],[12,'ТВП',62,'Ж','Инфильтративный','Левое',22,'ok'],
+  [13,'БША',32,'М','Инфильтративный','Правое',20,'ok'],[14,'БИР',36,'М','Диссеминированный','Оба',20,'ok'],
+  [15,'СЗС',38,'Ж','Инфильтративный','Правое',20,'ok'],[16,'ЖТП',69,'Ж','Инфильтративный','Левое',20,'ok'],
+  [17,'ЛМВ',23,'Ж','Диссеминированный','Оба',26,'ok'],[18,'БАХ',23,'Ж','Инфильтративный','Правое',18,'ok'],
+  [19,'ЗДД',25,'М','Инфильтративный','Правое',21,'ok'],[20,'КЕР',38,'Ж','Инфильтративный','Правое',22,'ok'],
+  [21,'ПДВ',43,'М','Инфильтративный','Оба',22,'ok'],[22,'КТА',35,'Ж','Диссеминированный','Оба',24,'ok'],
+  [23,'СВА',65,'Ж','Инфильтративный','Левое',22,'ok'],[24,'БВВ',54,'М','Инфильтративный','Правое',24,'ok'],
+  [25,'ГАГ',50,'М','Инфильтративный','—',20,'ok'],[26,'СВА',69,'Ж','Инфильтративный','Оба',20,'ok'],
+  [27,'УРА',40,'М','Инфильтративный','Левое',20,'ok'],[28,'ТВФ',54,'Ж','Инфильтративный','Правое',20,'ok'],
+  [29,'КАС',33,'М','Инфильтративный','Левое',20,'ok'],[30,'КАВ',41,'М','Инфильтративный','Левое',20,'ok'],
+  [31,'ЧЛА',69,'Ж','Инфильтративный','Левое',20,'ok'],[32,'КХК',67,'Ж','Инфильтративный','Левое',18,'ok'],
+  [33,'НАВ',46,'М','Диссеминированный','Оба',16,'ok'],[34,'КСХ',41,'М','Инфильтративный','Правое',16,'ok'],
+  [35,'ДРВ',34,'М','Диссеминированный','Оба',18,'ok'],[36,'САО',48,'М','Диссеминированный','Правое',28,'ok'],
+  [37,'КММЮ',30,'Ж','Инфильтративный','Правое',20,'ok'],[38,'ВКД',64,'Ж','Инфильтративный','Правое',23,'ok'],
+  [39,'РКО',32,'Ж','Инфильтративный','Правое',20,'ok'],[40,'РВС',28,'Ж','Инфильтративный','Правое',20,'ok'],
+  [41,'БНБ',47,'Ж','Инфильтративный','Левое',23,'ok'],[42,'ОЛГ',24,'Ж','Инфильтративный','Левое',22,'ok'],
+  [43,'КВП',45,'Ж','Инфильтративный','Левое',22,'ok'],[44,'РВФ',59,'М','Инфильтративный','Правое',20,'ok'],
+  [45,'КНА',34,'Ж','Диссеминированный','Правое',20,'ok'],
+  [46,'ВТО',20,'Ж','Туберкулёма','Правое',null,'nd'],[47,'СА',35,'Ж','Инфильтративный','—',null,'nd'],
+  [48,'ТСН',37,'М','Инфильтративный','Оба',null,'nd'],[49,'ПВР',37,'Ж','Диссеминированный','Оба',null,'nd'],
+  [50,'РМС',34,'М','Очаговый','—',null,'nd'],[51,'СГП',22,'Ж','Диссеминированный','Оба',null,'nd'],
+  [52,'СЮВ',35,'М','Инфильтративный','Оба',null,'nd'],[53,'ЧАВ',47,'Ж','Инфильтративный','Правое',null,'nd'],
+  [54,'БКМ',19,'М','Диссеминированный','Правое',null,'nd'],[55,'ГКЕ',58,'М','Инфильтративный','Правое',null,'nd'],
+  [56,'МСМ',29,'Ж','Туберкулёма','Правое',null,'nd'],[57,'ПМЮ',41,'Ж','Инфильтративный','Правое',null,'nd'],
+  [58,'ОМА',63,'М','Инфильтративный','Правое',null,'nd'],[59,'ГГВ',26,'М','Инфильтративный','Оба',null,'nd'],
+  [60,'ЗЕМ',52,'Ж','Туберкулёма','Левое',null,'nd'],
+];
+
+let tasks={apr:[],may:[],jun:[]};
+let platTasks=[];
+let ctxTarget=null;
+let ogFilter='all';
+let kgFilter='all';
+let aNotes={};
+
+// ==================== COMPUTED STATS ====================
+function computeOGStats(){
+  const total=ogData.length;
+  const excl=ogData.filter(p=>p.status==='excluded').length;
+  const done=ogData.filter(p=>p.status==='complete').length;
+  const act=ogData.filter(p=>p.status==='active').length;
+  return{total,excl,done,act,inAnalysis:total-excl};
+}
+
+// ==================== RENDER FUNCTIONS ====================
+function renderDash(){
+  const s=computeOGStats();
+  // Top stats
+  document.getElementById('dash-stats').innerHTML=`
+    <div class="sc c-blue"><div class="sc-val">${s.total}</div><div class="sc-label">Включено в ОГ</div><div class="sc-sub">I–II группы исследования</div></div>
+    <div class="sc c-green"><div class="sc-val">60</div><div class="sc-label">Включено в КГ</div><div class="sc-sub">IV группа (цель: 370)</div></div>
+    <div class="sc c-green"><div class="sc-val">${s.done}</div><div class="sc-label">Завершили лечение</div><div class="sc-sub">ОГ · эффективный исход</div></div>
+    <div class="sc c-yellow"><div class="sc-val">${s.act}</div><div class="sc-label">Продолжают лечение</div><div class="sc-sub">ОГ · активных пациентов</div></div>
+    <div class="sc c-red"><div class="sc-val">${s.excl}</div><div class="sc-label">Исключены из ОГ</div><div class="sc-sub">Критерии исключения</div></div>
+  `;
+  // OG mini stats
+  document.getElementById('og-stats-mini').innerHTML=`
+    <div class="sc c-blue"><div class="sc-val">${s.total}</div><div class="sc-label">Всего включено</div><div class="sc-sub">Цель I–III гр.: 118</div></div>
+    <div class="sc c-green"><div class="sc-val">${s.done}</div><div class="sc-label">Завершили</div><div class="sc-sub">Эфф. исход 100%</div></div>
+    <div class="sc c-yellow"><div class="sc-val">${s.act}</div><div class="sc-label">В процессе</div><div class="sc-sub">Активных</div></div>
+    <div class="sc c-red"><div class="sc-val">${s.excl}</div><div class="sc-label">Исключены</div><div class="sc-sub">Из исследования</div></div>
+  `;
+  // KG mini stats
+  document.getElementById('kg-stats-mini').innerHTML=`
+    <div class="sc c-green"><div class="sc-val">60</div><div class="sc-label">Всего включено</div><div class="sc-sub">Цель: 370</div></div>
+    <div class="sc c-green"><div class="sc-val">97.8%</div><div class="sc-label">Эффективность</div><div class="sc-sub">44/45 с данными ХТ</div></div>
+    <div class="sc c-navy"><div class="sc-val">20.4</div><div class="sc-label">Ср. мес. ХТ</div><div class="sc-sub">Диапазон 16–28</div></div>
+    <div class="sc c-orange"><div class="sc-val">15</div><div class="sc-label">Без данных ХТ</div><div class="sc-sub">Уточнить ФРБТ</div></div>
+  `;
+  // Region bars
+  const regions={
+    'Воронеж':'vor','Кемерово':'kemer','Астрахань':'astr',
+    'НМИЦ ФПИ':'nmits','Оренбург':'oren','Краснодар':'krasn',
+    'Ленинградская обл.':'lenob','Нижний Новгород':'nnov','Сахалин':'sakhal'
+  };
+  const colors=['var(--blue)','var(--green)','var(--teal)','var(--purple)','var(--orange)','var(--yellow)','#0891b2','#065f46','#6d28d9'];
+  let barsHtml='';
+  let ci=0;
+  for(const[label,code] of Object.entries(regions)){
+    const cnt=ogData.filter(p=>p.region===code).length;
+    if(cnt===0){ci++;continue;}
+    const pct=Math.round(cnt/s.total*100);
+    barsHtml+=`<div class="pr"><div class="pr-label" style="min-width:130px">${label}</div><div class="pr-bg"><div class="pr-fill" style="width:${Math.max(pct,3)}%;background:${colors[ci%colors.length]}"></div></div><div class="pr-num" style="color:${colors[ci%colors.length]}">${cnt} (${pct}%)</div></div>`;
+    ci++;
+  }
+  document.getElementById('og-region-bars').innerHTML=barsHtml;
+  // Progress
+  const pctOG=Math.round(s.total/118*100);
+  const pctKG=Math.round(60/370*100);
+  document.getElementById('pr-og').style.width=pctOG+'%';
+  document.getElementById('pr-og-txt').textContent=`${s.total}/118 (${pctOG}%)`;
+  document.getElementById('pr-kg').style.width=pctKG+'%';
+  document.getElementById('pr-kg-txt').textContent=`60/370 (${pctKG}%)`;
+  // Comparison table
+  document.getElementById('cmp-table-body').innerHTML=`
+    <tr><td>Возраст, M±σ</td><td style="color:var(--blue);font-weight:600">42.1±11.2</td><td style="color:var(--green);font-weight:600">42.8±15.3</td><td class="p-ns">p=0.82</td></tr>
+    <tr><td>Мужской пол</td><td style="color:var(--blue);font-weight:600">83.3%</td><td style="color:var(--green);font-weight:600">46.7%</td><td class="p-sig">p=0.001</td></tr>
+    <tr><td>Инфильтративный ТБ</td><td style="color:var(--blue);font-weight:600">76.2%</td><td style="color:var(--green);font-weight:600">81.7%</td><td class="p-ns">p=0.42</td></tr>
+    <tr><td>Длительность ХТ</td><td style="color:var(--blue);font-weight:600">6 мес.</td><td style="color:var(--green);font-weight:600">20.4 мес.</td><td class="p-sig">p&lt;0.001</td></tr>
+    <tr><td>Завершили / оценены</td><td style="color:var(--blue);font-weight:600">${s.done}/${s.done} (100%)*</td><td style="color:var(--green);font-weight:600">44/45 (97.8%)</td><td class="p-ns">p=1.0</td></tr>
+  `;
+  // OG footer stat tag
+  const el=document.getElementById('og-count-tag');
+  if(el)el.textContent=`${s.total} пациентов · ${s.act} в процессе · ${s.done} завершили · ${s.excl} исключены`;
+  const ff=document.getElementById('og-footer-stat');
+  if(ff)ff.textContent=`Всего: ${s.total} | В процессе: ${s.act} | Завершили: ${s.done} | Исключены: ${s.excl} | В анализе эффективности: ${s.inAnalysis}`;
+  // filter badges
+  const fa=document.getElementById('f-all-n');if(fa)fa.textContent='('+s.total+')';
+  const fd=document.getElementById('f-done-n');if(fd)fd.textContent='('+s.done+')';
+  const fa2=document.getElementById('f-act-n');if(fa2)fa2.textContent='('+s.act+')';
+  const fe=document.getElementById('f-ex-n');if(fe)fe.textContent='('+s.excl+')';
+  // Flags
+  const warnP05=ogData.find(p=>p.id==='П-05');
+  const flags=document.getElementById('flags-block');
+  if(flags) flags.innerHTML=`
+    <div class="flag f-r"><div class="fi">⚠️</div><div><b>П-05 (Кемерово)</b> — нарастание инфильтрации, хирург 14.04.26. Уточнить МБТ-статус → ТМК НМИЦ ФПИ.</div></div>
+    <div class="flag f-r"><div class="fi">⚠️</div><div><b>Шевелёв Н.С. (ТубоМед)</b> — абонемент истёк 28.04.2026. Срочно продлить.</div></div>
+    <div class="flag f-y"><div class="fi">▲</div><div><b>Запрос обновлённой БД</b> — Астрахань и Кемерово (20.04.26). Воронеж — запрос после обновления.</div></div>
+    <div class="flag f-y"><div class="fi">▲</div><div><b>Веревкин А.В. (Курск)</b> — ожидается ТМК отборочная. Контролировать.</div></div>
+    <div class="flag f-b"><div class="fi">ℹ</div><div><b>КАП (Колыванов А.П.)</b> — ТМК 21.04.26, рек. гр.1.3. Из контакта с отцом (МЛУ). Очаговый S2 МБТ(−).</div></div>
+    <div class="flag f-g"><div class="fi">✓</div><div><b>Завершили эффективно:</b> П-01 (КМ), 1САА, 2РСВ, 6КАА (ВН), 1АСТ, 3АСТ, 4АСТ.</div></div>
+  `;
+}
+
+function renderOG(){
+  const q=(document.getElementById('og-search')?.value||'').toLowerCase();
+  const tbody=document.getElementById('og-tbody');
+  if(!tbody)return;
+  const filtered=ogData.filter(p=>{
+    const mR=ogFilter==='all'||p.status===ogFilter||p.region===ogFilter||(ogFilter==='other'&&!['kemer','vor','astr','nmits','oren','nnov'].includes(p.region));
+    const mQ=!q||JSON.stringify(p).toLowerCase().includes(q);
+    return mR&&mQ;
+  });
+  const grpBadge={'гр.1.1':'bb','гр.1.2':'bp','гр.1.3':'bg','гр.1.4':'bo'};
+  const statusBadge={'complete':'<span class="b bg">✓ Завершён</span>','active':'<span class="b by">В процессе</span>','excluded':'<span class="b br">Исключён</span>'};
+  const trClass={'complete':'tr-ok','active':'tr-act','excluded':'tr-ex'};
+  // Compute next control point for active patients
+  const now=new Date();
+  function cpBadge(p){
+    if(p.status!=='active')return'—';
+    if(p.cp)return`<span class="b by" style="font-size:10px">${p.cp}</span>`;
+    if(!p.doses)return'<span class="b bgy" style="font-size:10px">Данных нет</span>';
+    return'<span class="b bb" style="font-size:10px">Плановая</span>';
+  }
+  tbody.innerHTML=filtered.map(p=>`
+    <tr class="${trClass[p.status]||''}">
+      <td><b>${p.id}</b></td>
+      <td><span class="b bgy" style="font-size:10px">${p.regionLabel}</span></td>
+      <td style="white-space:nowrap">${p.date}</td>
+      <td style="white-space:nowrap">${p.age}/${p.sex}</td>
+      <td style="max-width:180px">${p.form}${p.loc?'<br><small style="color:var(--text3)">'+p.loc+'</small>':''}</td>
+      <td style="max-width:200px;font-size:12px">${p.xt}</td>
+      <td><span class="b ${grpBadge[p.grp]||'bgy'}">${p.grp}</span><br><span style="font-size:10px;color:var(--text3)">${p.grp==='гр.1.4'?'пре-ШЛУ':'МЛУ'}</span></td>
+      <td style="text-align:center">${p.doses||'—'}</td>
+      <td>${cpBadge(p)}</td>
+      <td>${statusBadge[p.status]||''}</td>
+      <td style="font-size:12px;max-width:120px">${p.mbt}</td>
+      <td style="font-size:12px;max-width:120px;color:${p.ae&&p.ae!=='—'?'var(--orange)':'var(--text3)'}">${p.ae||'—'}</td>
+      <td style="font-size:12px;white-space:nowrap">${p.doc||'—'}</td>
+      <td><div class="note" contenteditable="true" data-ogid="${p.id}" onblur="saveOGNote(this)">${p.note||''}</div></td>
+    </tr>`).join('');
+  addCEListeners();
+}
+
+function saveOGNote(el){
+  const id=el.dataset.ogid;
+  const p=ogData.find(x=>x.id===id);
+  if(p)p.note=el.textContent;
+  saveAll();
+}
+
+function renderKG(){
+  const q=(document.getElementById('kg-search')?.value||'').toLowerCase();
+  const tbody=document.getElementById('kg-tbody');if(!tbody)return;
+  const filtered=kgData.filter(r=>{
+    const mF=kgFilter==='all'||r[7]===kgFilter;
+    const mQ=!q||r.join(' ').toLowerCase().includes(q);
+    return mF&&mQ;
+  });
+  const outcomeMap={'ok':'<span class="b bg">✓ Эффективный</span>','fail':'<span class="b br">✗ Неэффективный</span>','nd':'<span class="b bgy">Нет данных</span>'};
+  const trMap={'ok':'tr-ok','fail':'tr-ex','nd':'tr-nd'};
+  tbody.innerHTML=filtered.map(r=>`
+    <tr class="${trMap[r[7]]}">
+      <td>${r[0]}</td><td><b>${r[1]}</b></td>
+      <td><span style="font-family:monospace;font-size:11px">АВ-${String(r[0]).padStart(3,'0')}</span></td>
+      <td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td>
+      <td>${r[6]?r[6]+' мес.':'—'}</td>
+      <td>${outcomeMap[r[7]]}</td>
+      <td>${r[6]?'<span class="b bg">OK — '+r[6]+' мес.</span>':'<span class="b by">ХТ уточнить</span>'}</td>
+      <td><div class="note" contenteditable="true" style="min-width:100px"></div></td>
+    </tr>`).join('');
+  addCEListeners();
+}
+
+function renderOGAnalytics(){
+  const s=computeOGStats();
+  // composition
+  document.getElementById('og-anal-composition').innerHTML=`
+    <div class="pr"><div class="pr-label">Всего включено</div><div class="pr-bg"><div class="pr-fill" style="width:100%;background:var(--blue)"></div></div><div class="pr-num">${s.total}</div></div>
+    <div class="pr"><div class="pr-label">В процессе лечения</div><div class="pr-bg"><div class="pr-fill" style="width:${s.act/s.total*100}%;background:var(--yellow)"></div></div><div class="pr-num">${s.act} (${Math.round(s.act/s.total*100)}%)</div></div>
+    <div class="pr"><div class="pr-label">Завершили (оценены)</div><div class="pr-bg"><div class="pr-fill" style="width:${s.done/s.total*100}%;background:var(--green)"></div></div><div class="pr-num">${s.done} (${Math.round(s.done/s.total*100)}%)</div></div>
+    <div class="pr"><div class="pr-label">Исключены из анализа</div><div class="pr-bg"><div class="pr-fill" style="width:${s.excl/s.total*100}%;background:var(--red)"></div></div><div class="pr-num">${s.excl} (${Math.round(s.excl/s.total*100)}%)</div></div>
+  `;
+  // grps
+  const grpCnt={'гр.1.1':0,'гр.1.2':0,'гр.1.3':0,'гр.1.4':0};
+  ogData.filter(p=>p.status!=='excluded').forEach(p=>{if(grpCnt[p.grp]!==undefined)grpCnt[p.grp]++;});
+  const act=ogData.filter(p=>p.status!=='excluded').length;
+  const grpColors={'гр.1.1':'var(--blue)','гр.1.2':'var(--purple)','гр.1.3':'var(--green)','гр.1.4':'var(--orange)'};
+  document.getElementById('og-anal-grps').innerHTML=Object.entries(grpCnt).map(([g,n])=>
+    `<div class="pr"><div class="pr-label">${g}</div><div class="pr-bg"><div class="pr-fill" style="width:${act>0?n/act*100:0}%;background:${grpColors[g]}"></div></div><div class="pr-num">${n}</div></div>`).join('');
+  // forms
+  const forms={};
+  ogData.filter(p=>p.status!=='excluded').forEach(p=>{forms[p.form]=(forms[p.form]||0)+1;});
+  document.getElementById('og-anal-forms').innerHTML=Object.entries(forms).sort((a,b)=>b[1]-a[1]).map(([f,n])=>
+    `<div class="pr"><div class="pr-label">${f}</div><div class="pr-bg"><div class="pr-fill" style="width:${n/act*100}%;background:var(--blue)"></div></div><div class="pr-num">${n}</div></div>`).join('');
+  // Heatmap
+  renderHeatmap();
+}
+
+function renderHeatmap(){
+  const systems=['Гепатотоксичность','QTc удлинение','Миелосупрессия','Нейропатия периф.','Нефротоксичность','Диспепсия','Кожные реакции','Зрительные НЯ'];
+  const patients=ogData.filter(p=>p.status!=='excluded').slice(0,10).map(p=>p.id);
+  let html='<div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:11px"><thead><tr><th style="background:var(--surface2);padding:6px 8px;text-align:left;font-weight:600;min-width:140px">Система/НЯ</th>';
+  patients.forEach(id=>{html+=`<th style="background:var(--surface2);padding:4px 6px;text-align:center;white-space:nowrap">${id}</th>`;});
+  html+='</tr></thead><tbody>';
+  systems.forEach(sys=>{
+    html+=`<tr><td style="padding:5px 8px;font-weight:500;color:var(--text2)">${sys}</td>`;
+    patients.forEach(id=>{
+      const p=ogData.find(x=>x.id===id);
+      let cls='hc-na',txt='—';
+      if(p&&p.ae){
+        if(sys==='QTc удлинение'&&p.ae.includes('QTc')){cls='hc-mild';txt='1-2';}
+        else if(sys==='Гепатотоксичность'&&p.ae.includes('гепат')){cls='hc-mod';txt='3';}
+        else if(p.ae==='—'||!p.ae){cls='hc-ok';txt='0';}
+        else{cls='hc-ok';txt='0';}
+      }else{cls='hc-ok';txt='0';}
+      html+=`<td style="text-align:center;padding:3px"><div class="heat-cell ${cls}">${txt}</div></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  const el=document.getElementById('heatmap-container');if(el)el.innerHTML=html;
+}
+
+function renderPlatformCards(){
+  const platData=[
+    {name:'Федотова С.В.',num:'30-03-2026-2',from:'30.03.2026',to:'30.03.2027',dob:'26.12.1983',age:42,sex:'Ж',phone:'+79013655021',sent:9,recv:11,region:'НМИЦ ФПИ',doc:'Назарова Л.Д.',active:true,note:'На платформе с марта 2026'},
+    {name:'Поляков И.М.',num:'30-03-2026-1',from:'30.03.2026',to:'30.03.2027',dob:'04.08.1983',age:42,sex:'М',phone:'—',sent:7,recv:9,region:'НМИЦ ФПИ',doc:'Назарова Л.Д.',active:true,note:''},
+    {name:'Дроздов А.И.',num:'09-04-2026-1',from:'09.04.2026',to:'09.04.2027',dob:'19.06.1983',age:42,sex:'М',phone:'+79067937964',sent:3,recv:7,region:'НМИЦ ФПИ',doc:'Бурмистрова И.А.',active:true,note:'Низкая переписка — напомнить'},
+    {name:'Стёпина Т.А.',num:'03-02-2026-1',from:'03.02.2026',to:'03.02.2027',dob:'09.11.1980',age:45,sex:'Ж',phone:'+79273819709',sent:5,recv:3,region:'НМИЦ ФПИ (3ТО)',doc:'Гайда А.И.',active:true,note:''},
+    {name:'Жучкова Д.С.',num:'03-02-2026-2',from:'03.02.2026',to:'03.02.2027',dob:'14.04.2004',age:22,sex:'Ж',phone:'—',sent:12,recv:11,region:'НМИЦ ФПИ (амбул.)',doc:'Пузько А.С.',active:true,note:'Высокая активность'},
+    {name:'Кочетков Д.С.',num:'23-01-2026-1',from:'23.01.2026',to:'23.01.2027',dob:'27.10.1998',age:27,sex:'М',phone:'—',sent:12,recv:19,region:'⚠ Уточнить',doc:'—',active:true,note:'⚠ Не идентифицирован в БД пациентов'},
+    {name:'Шевелёв Н.С.',num:'28-01-2026-2',from:'28.01.2026',to:'28.04.2026',dob:'15.09.2005',age:20,sex:'М',phone:'—',sent:5,recv:2,region:'⚠ Уточнить',doc:'—',active:false,note:'⚠ ИСТЁК 28.04.26. Уточнить статус.'},
+  ];
+  const el=document.getElementById('plat-cards');if(!el)return;
+  el.innerHTML=platData.map(p=>{
+    const pct=Math.min(100,Math.round(p.recv/(p.sent+p.recv||1)*100));
+    const expired=!p.active;
+    return`<div class="pc" style="${expired?'border-color:#fecaca;background:#fff5f5':''}">
+      <div class="pc-status"><span class="b ${expired?'br':'bg'}">${expired?'⚠ ИСТЁК':'Активен'}</span></div>
+      <div class="pc-name" style="${expired?'color:var(--red)':''}">${p.name}</div>
+      <div class="pc-id">${p.num}</div>
+      <div class="pc-row"><span class="pc-lbl">Регион:</span><span class="b ${p.region.includes('⚠')?'by':'bgy'}" style="font-size:10px">${p.region}</span></div>
+      <div class="pc-row"><span class="pc-lbl">Дата рожд.:</span>${p.dob} (${p.age} л., ${p.sex})</div>
+      <div class="pc-row"><span class="pc-lbl">Абонемент:</span><span style="${expired?'color:var(--red);font-weight:700':''}">${p.from} – ${p.to}</span></div>
+      ${p.phone&&p.phone!=='—'?`<div class="pc-row"><span class="pc-lbl">Телефон:</span>${p.phone}</div>`:''}
+      <div class="pc-row"><span class="pc-lbl">Врач:</span>${p.doc}</div>
+      <div class="msg-wrap">
+        <div class="msg-text"><span>Сообщения:</span><span style="font-weight:700">${p.sent} / ${p.recv}</span></div>
+        <div class="msg-bar"><div class="msg-fill" style="width:${pct}%;background:${expired?'var(--red)':pct>60?'var(--green)':'var(--yellow)'}"></div></div>
+      </div>
+      <div class="note" contenteditable="true" style="margin-top:10px${expired?';border-color:#fca5a5;background:#fee2e2':''}">${p.note}</div>
+    </div>`;
+  }).join('');
+  addCEListeners();
+}
+
+function renderPlatTasks(){
+  const el=document.getElementById('plat-tasks');if(!el)return;
+  el.innerHTML=platTasks.map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:7px;padding:7px 3px;border-bottom:1px solid var(--border)">
+      <input type="checkbox" ${t.done?'checked':''} onchange="togglePlatTask(${i})" style="width:14px;height:14px;cursor:pointer;accent-color:var(--blue)">
+      <span style="flex:1;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.text}</span>
+      <button onclick="deletePlatTask(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px">✕</button>
+    </div>`).join('')||'<div style="font-size:12px;color:var(--text3);padding:6px">Задач нет</div>';
+}
+
+function addPlatTask(){const i=document.getElementById('pt-in');if(!i.value.trim())return;platTasks.push({text:i.value.trim(),done:false});i.value='';renderPlatTasks();saveAll();}
+function togglePlatTask(i){platTasks[i].done=!platTasks[i].done;renderPlatTasks();saveAll();}
+function deletePlatTask(i){platTasks.splice(i,1);renderPlatTasks();saveAll();}
+
+// ==================== CT JOURNAL ====================
+let ctCards=[];
+function renderCTJournal(){
+  const el=document.getElementById('ct-journal');if(!el)return;
+  if(ctCards.length===0)el.innerHTML='<div style="color:var(--text3);font-size:12.5px;padding:20px;text-align:center">Нажмите «+ Добавить пациента / КТ-запись» для начала работы с КТ-данными.</div>';
+  else el.innerHTML=ctCards.map((c,i)=>`
+    <div style="border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;background:var(--surface2)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="font-weight:700;color:var(--navy)">${c.patient}</div>
+        <span class="b bgy" style="font-size:10px">${c.region}</span>
+        <span class="b bb" style="font-size:10px">${c.date}</span>
+        <button onclick="removeCTCard(${i})" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px">✕</button>
+      </div>
+      <div class="note" contenteditable="true" style="margin-bottom:10px" onblur="ctCards[${i}].desc=this.textContent;saveAll()" placeholder="Описание КТ, клиническая характеристика…">${c.desc||''}</div>
+      <div class="img-grid" id="img-grid-${i}"></div>
+      <label style="cursor:pointer;display:block;margin-top:8px">
+        <div class="drop-zone" id="drop-${i}" ondragover="ev.preventDefault()" ondrop="handleDrop(event,${i})">
+          <div class="drop-text">📎 Нажмите или перетащите снимок КТ</div>
+        </div>
+        <input type="file" accept="image/*" multiple style="display:none" onchange="handleFileInput(this.files,${i})">
+      </label>
+    </div>`).join('');
+  ctCards.forEach((_,i)=>renderCTImages(i));
+}
+function addCTCard(){
+  const p=prompt('ID пациента:','');const r=prompt('Регион:','');const d=prompt('Дата КТ:','');
+  if(!p)return;ctCards.push({patient:p,region:r||'',date:d||'',desc:'',images:[]});renderCTJournal();saveAll();
+}
+function removeCTCard(i){ctCards.splice(i,1);renderCTJournal();saveAll();}
+function handleFileInput(files,idx){[...files].forEach(f=>{const r=new FileReader();r.onload=e=>{ctCards[idx].images.push({src:e.target.result,note:''});renderCTImages(idx);saveAll();};r.readAsDataURL(f);});}
+function handleDrop(e,idx){e.preventDefault();handleFileInput(e.dataTransfer.files,idx);}
+function renderCTImages(idx){
+  const g=document.getElementById('img-grid-'+idx);if(!g)return;
+  g.innerHTML=ctCards[idx].images.map((img,j)=>`
+    <div class="img-thumb">
+      <img src="${img.src}" alt="КТ">
+      <button class="img-del" onclick="removeCTImg(${idx},${j})">✕</button>
+      <div class="img-note" contenteditable="true" onblur="ctCards[${idx}].images[${j}].note=this.textContent;saveAll()" placeholder="Описание…">${img.note||''}</div>
+    </div>`).join('');
+}
+function removeCTImg(idx,j){ctCards[idx].images.splice(j,1);renderCTImages(idx);saveAll();}
+
+// ==================== TASKS ====================
+function addTask(m){const i=document.getElementById('ti-'+m);if(!i||!i.value.trim())return;tasks[m].push({text:i.value.trim(),done:false});i.value='';renderTasks(m);saveAll();}
+function toggleTask(m,i){tasks[m][i].done=!tasks[m][i].done;renderTasks(m);saveAll();}
+function deleteTask(m,i){tasks[m].splice(i,1);renderTasks(m);saveAll();}
+function renderTasks(m){
+  const el=document.getElementById('tasks-'+m);if(!el)return;
+  el.innerHTML=(tasks[m]||[]).map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:7px;padding:7px 3px;border-bottom:1px solid var(--border)">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${m}',${i})" style="width:14px;height:14px;cursor:pointer;accent-color:var(--blue)">
+      <span style="flex:1;font-size:12.5px;${t.done?'text-decoration:line-through;color:var(--text3)':''}">${t.text}</span>
+      <button onclick="deleteTask('${m}',${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px">✕</button>
+    </div>`).join('')||'<div style="font-size:12px;color:var(--text3);padding:6px">Задач нет</div>';
+}
+
+// ==================== ADD MICRO / AE ROWS ====================
+function addMicroRow(){const tb=document.getElementById('micro-tbody');if(!tb)return;const tr=document.createElement('tr');tr.innerHTML=`<td><b><span contenteditable="true">—</span></b></td><td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td>${Array(7).fill('<td><div class="note" contenteditable="true"></div></td>').join('')}`;tb.appendChild(tr);addCEListeners();}
+function addAERow(){const tb=document.querySelector('#at-ae table tbody');if(!tb)return;const tr=document.createElement('tr');tr.innerHTML=`<td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td><td><span class="b bgy">—</span></td><td><span contenteditable="true">—</span></td><td><span class="b bgy">—</span></td><td><span contenteditable="true">—</span></td>`;tb.appendChild(tr);addCEListeners();}
+function addTLCRow(){const tb=document.getElementById('tlc-tbody');if(!tb)return;const tr=document.createElement('tr');const rCell=()=>`<td><span class="b bgy" onclick="toggleTLC(this)" style="cursor:pointer">?</span></td>`;tr.innerHTML=`<td><b><span contenteditable="true">—</span></b></td><td><span contenteditable="true">—</span></td><td><span contenteditable="true">—</span></td>${Array(12).fill(rCell()).join('')}<td><span contenteditable="true">—</span></td><td><div class="note" contenteditable="true"></div></td><td><div class="note" contenteditable="true"></div></td>`;tb.appendChild(tr);addCEListeners();}
+function toggleTLC(el){const states=[{cl:'bgy',t:'?'},{cl:'br',t:'У'},{cl:'bg',t:'Ч'},{cl:'bgy',t:'Н/Д'}];let ci=states.findIndex(s=>el.classList.contains('b '+s.cl)&&el.textContent===s.t);if(ci<0)ci=0;else ci=(ci+1)%states.length;el.className=`b ${states[ci].cl}`;el.textContent=states[ci].t;saveAll();}
+function addRegRow(tbid){const tb=document.querySelector('#'+tbid);if(!tb)return;const tbody=tb.tagName==='TABLE'?tb.querySelector('tbody'):document.querySelector('#'+tbid+' tbody');if(!tbody)return;const tr=document.createElement('tr');const cols=tbody.closest('table').querySelectorAll('th').length;tr.innerHTML=Array(cols).fill('<td><span contenteditable="true">—</span></td>').join('');tbody.appendChild(tr);addCEListeners();}
+
+// ==================== ADD PATIENT ====================
+function openAddModal(){document.getElementById('addModal').classList.add('show');}
+function closeAddModal(){document.getElementById('addModal').classList.remove('show');}
+function submitAddPatient(){
+  const id=document.getElementById('f-id').value.trim();if(!id)return alert('Укажите ID пациента!');
+  const region=document.getElementById('f-region').value;
+  const regionLabels={'kemer':'Кемерово','vor':'Воронеж','astr':'Астрахань','nmits':'НМИЦ ФПИ','oren':'Оренбург','lenob':'Ленинградская обл.','krasn':'Краснодар','kursk':'Курская обл.','nnov':'Нижний Новгород','sakhal':'Сахалин','other':'Другой регион'};
+  const grp=document.getElementById('f-grp').value;
+  const grpClass={'гр.1.1':'bb','гр.1.2':'bp','гр.1.3':'bg','гр.1.4':'bo'};
+  ogData.push({
+    id,region,regionLabel:regionLabels[region]||region,
+    date:document.getElementById('f-date').value,
+    age:document.getElementById('f-age').value.split('/')[0]||'—',
+    sex:document.getElementById('f-age').value.split('/')[1]||'—',
+    form:document.getElementById('f-form').value,loc:'',
+    xt:document.getElementById('f-xt').value,
+    grp,grpClass:grpClass[grp]||'bgy',
+    doses:+document.getElementById('f-doses').value||null,
+    status:document.getElementById('f-status').value,
+    mbt:document.getElementById('f-mbt').value,ae:document.getElementById('f-ae').value,
+    doc:document.getElementById('f-doc').value,note:document.getElementById('f-note').value,cp:''
+  });
+  closeAddModal();renderAll();saveAll();
+}
+
+// ==================== CONTEXT MENU ====================
+const bgPal=['#dbeafe','#dcfce7','#fef9c3','#ffedd5','#fee2e2','#ede9fe','#cffafe','#f1f5f9','#fdf4ff','#fff7ed','#ecfdf5','#fef2f2'];
+const fgPal=['#1d4ed8','#15803d','#854d0e','#c2410c','#991b1b','#5b21b6','#0e7490','#475569','#7e22ce','#c2410c','#065f46','#dc2626'];
+function buildCols(id,pal,fn){document.getElementById(id).innerHTML=pal.map(c=>`<div class="cd" style="background:${c}" onclick="${fn}('${c}')"></div>`).join('');}
+function openCtx(e,t){e.preventDefault();e.stopPropagation();ctxTarget=t;const m=document.getElementById('ctxMenu');buildCols('bgCols',bgPal,'setBg');buildCols('fgCols',fgPal,'setFg');m.classList.add('show');m.style.left=Math.min(e.clientX,window.innerWidth-240)+'px';m.style.top=Math.min(e.clientY,window.innerHeight-230)+'px';}
+function setBg(c){if(ctxTarget){ctxTarget.style.background=c;ctxTarget.style.border='1px solid '+c+'88';}saveAll();}
+function setFg(c){if(ctxTarget)ctxTarget.style.color=c;saveAll();}
+function ctxReset(){if(ctxTarget){ctxTarget.removeAttribute('style');}saveAll();}
+function ctxClose(){document.getElementById('ctxMenu').classList.remove('show');}
+document.addEventListener('click',e=>{if(!e.target.closest('#ctxMenu'))ctxClose();});
+
+// ==================== NAV ====================
+function goTab(tab,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  el.classList.add('active');
+}
+function setOGF(btn,f){document.querySelectorAll('#page-og .fc').forEach(b=>b.classList.remove('active'));btn.classList.add('active');ogFilter=f;renderOG();}
+function setKGF(btn,f){document.querySelectorAll('#page-kg .fc').forEach(b=>b.classList.remove('active'));btn.classList.add('active');kgFilter=f;renderKG();}
+function setATab(el,id){document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.atab-content').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById(id).classList.add('active');}
+
+// ==================== STATISTICS ====================
+function calcChi2(){
+  const a=+document.getElementById('c-a').value,b=+document.getElementById('c-b').value,c=+document.getElementById('c-c').value,d=+document.getElementById('c-d').value;
+  const n=a+b+c+d;const chi2=n*(Math.abs(a*d-b*c)-n/2)**2/((a+b)*(c+d)*(a+c)*(b+d));
+  const sig=chi2>3.841;
+  const el=document.getElementById('chi2-result');el.style.display='block';
+  el.innerHTML=`<b class="${sig?'p-sig':'p-ns'}">χ² = ${chi2.toFixed(3)} → ${sig?'p < 0.05 (значимо)':'p ≥ 0.05 (незначимо)'}</b><br><span style="font-size:11px;color:var(--text3)">n=${n} | a=${a}, b=${b}, c=${c}, d=${d} | OR = ${d*b>0?(a*d/(b*c)).toFixed(2):'∞'}</span>`;
+}
+
+// ==================== EXCEL EXPORT ====================
+function exportExcel(){
+  if(typeof XLSX==='undefined'){alert('Библиотека XLSX не загружена.');return;}
+  const wb=XLSX.utils.book_new();
+  const s=computeOGStats();
+  // Sheet 1: Summary
+  const summaryRows=[
+    ['СВОДНАЯ СТАТИСТИКА ИССЛЕДОВАНИЯ МЛУ ТБ','','',''],
+    ['Дата формирования отчёта:',new Date().toLocaleDateString('ru-RU'),'',''],
+    ['','','',''],
+    ['Показатель','Значение','Цель','% выполнения'],
+    ['Основная группа (ОГ) — включено',s.total,118,Math.round(s.total/118*100)+'%'],
+    ['ОГ — в процессе лечения',s.act,'',''],
+    ['ОГ — завершили лечение',s.done,'',''],
+    ['ОГ — исключены из исследования',s.excl,'',''],
+    ['ОГ — эффективность (завершивших)',s.done+'/'+s.done+' (100%)','',''],
+    ['','','',''],
+    ['Контрольная группа (КГ) — включено',60,370,Math.round(60/370*100)+'%'],
+    ['КГ — эффективный исход','44/45 (97.8%)','',''],
+    ['КГ — неэффективный исход','1/45 (2.2%)','',''],
+    ['КГ — средняя длит. ХТ (мес.)','20.4','',''],
+    ['','','',''],
+    ['НАБОР ПО РЕГИОНАМ (ОГ)','','',''],
+  ];
+  const regions={vor:'Воронеж',kemer:'Кемерово',astr:'Астрахань',nmits:'НМИЦ ФПИ',oren:'Оренбург',krasn:'Краснодар',lenob:'Ленинградская обл.',nnov:'Нижний Новгород',sakhal:'Сахалин'};
+  Object.entries(regions).forEach(([code,label])=>{
+    const cnt=ogData.filter(p=>p.region===code).length;
+    if(cnt>0)summaryRows.push([label,cnt,'','']);
+  });
+  // Sheet 2: OG patients
+  const ogRows=[['ID','Регион','Дата В/в ЛУ','Возраст','Пол','Форма ТБ','Локализация','Схема ХТ','Группа','Тип ТБ','Дозы','Статус','МБТ','НЯ','Врач','Примечание']];
+  ogData.forEach(p=>ogRows.push([p.id,p.regionLabel,p.date,p.age,p.sex,p.form,p.loc,p.xt,p.grp,p.grp==='гр.1.4'?'пре-ШЛУ':'МЛУ',p.doses||'',p.status==='complete'?'Завершён':p.status==='excluded'?'Исключён':'В процессе',p.mbt,p.ae,p.doc,p.note]));
+  // Sheet 3: KG patients
+  const kgRows=[['#','Инициалы','Код','Возраст','Пол','Форма ТБ','Локализация','ХТ мес.','Исход','Статус']];
+  kgData.forEach(r=>kgRows.push([r[0],r[1],'АВ-'+String(r[0]).padStart(3,'0'),r[2],r[3],r[4],r[5],r[6]||'',r[7]==='ok'?'Эффективный':r[7]==='fail'?'Неэффективный':'Нет данных',r[6]?'OK — '+r[6]+' мес.':'ХТ уточнить']));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(summaryRows),'Сводка');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ogRows),'Основная группа');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(kgRows),'Контрольная группа');
+  XLSX.writeFile(wb,'МЛУ_ТБ_Отчёт_'+new Date().toLocaleDateString('ru-RU').replace(/\./g,'_')+'.xlsx');
+}
+
+// ==================== CE LISTENERS ====================
+function addCEListeners(){document.querySelectorAll('[contenteditable]:not([data-ceid])').forEach((el,i)=>{el.setAttribute('data-ceid','ce_'+Date.now()+'_'+i);el.addEventListener('input',()=>saveAll());});}
+
+// ==================== SAVE / LOAD ====================
+function saveAll(){
+  try{
+    const data={tasks,platTasks,ogData,ctCards};
+    document.querySelectorAll('[contenteditable][data-ceid]').forEach(el=>{data[el.dataset.ceid]=el.innerHTML;});
+    document.querySelectorAll('textarea[id]').forEach(el=>{data['ta_'+el.id]=el.value;});
+    localStorage.setItem('mlu_v4',JSON.stringify(data));
+    const ok=document.getElementById('save-ok');ok.style.opacity=1;setTimeout(()=>ok.style.opacity=0,2000);
+  }catch(e){console.warn('Save error',e);}
+}
+function loadAll(){
+  try{
+    const raw=localStorage.getItem('mlu_v4');if(!raw)return;
+    const data=JSON.parse(raw);
+    if(data.tasks)tasks=data.tasks;
+    if(data.platTasks)platTasks=data.platTasks;
+    if(data.ctCards)ctCards=data.ctCards;
+    if(data.ogData&&data.ogData.length>=ogData.length)ogData=data.ogData;
+    ['apr','may','jun'].forEach(m=>renderTasks(m));renderPlatTasks();
+    document.querySelectorAll('[contenteditable][data-ceid]').forEach(el=>{if(data[el.dataset.ceid]!==undefined)el.innerHTML=data[el.dataset.ceid];});
+    document.querySelectorAll('textarea[id]').forEach(el=>{if(data['ta_'+el.id])el.value=data['ta_'+el.id];});
+  }catch(e){console.warn('Load error',e);}
+}
+
+// ==================== RENDER ALL ====================
+function renderAll(){
+  renderDash();renderOG();renderKG();renderOGAnalytics();renderPlatformCards();renderCTJournal();
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('update-date-label').textContent='Обновлено: '+new Date().toLocaleDateString('ru-RU');
+  // Default tasks
+  if(!localStorage.getItem('mlu_v4')){
+    tasks={
+      apr:[
+        {text:'⚠ П-05 (Кемерово): уточнить МБТ-статус, вынести на ТМК до госпитализации',done:false},
+        {text:'⚠ Шевелёв Н.С.: продлить абонемент ТубоМед (истёк 28.04)',done:false},
+        {text:'Запрос обновл. БД — Астрахань (20.04.26)',done:false},
+        {text:'Запрос обновл. БД — Кемерово (20.04.26)',done:false},
+        {text:'Уточнить Кочетков Д.С. — регион и группа в исследовании',done:false},
+        {text:'Веревкин А.В. (Курск) — контроль ТМК отборочной',done:false},
+        {text:'КАП (Колыванов А.П.) — подтвердить включение в гр.1.3',done:false},
+      ],
+      may:[
+        {text:'Связаться с Надей: добавить КОАп-25 в платформу ТубоМед',done:false},
+        {text:'Связаться с Надей: добавить опросник обратной связи',done:false},
+        {text:'Контакт Татарстан (после выхода гл.врача из отпуска)',done:false},
+        {text:'Мониторинг 9ЖВВ, 10ЧЕЕ — 5 мес. ХТ',done:false},
+        {text:'Раздел «Методы» диссертации',done:false},
+      ],
+      jun:[
+        {text:'Конференция: подписать соглашение с Курском (Федосеев В.А.)',done:false},
+        {text:'Промежуточный анализ МБТ-конверсии',done:false},
+        {text:'Подготовка публикации по НЯ',done:false},
+        {text:'Оценка включения: Иркутск, Ставрополь',done:false},
+      ]
+    };
+    platTasks=[
+      {text:'КОАп-25 — добавить в ТубоМед (через Надю)',done:false},
+      {text:'Опросник обратной связи — добавить (через Надю)',done:false},
+      {text:'Шевелёв Н.С. — срочно продлить абонемент',done:false},
+      {text:'Кочетков Д.С. — идентифицировать в БД',done:false},
+    ];
+    ['apr','may','jun'].forEach(m=>renderTasks(m));renderPlatTasks();
+  }
+  renderAll();
+  loadAll();
+  addCEListeners();
+  document.addEventListener('input',e=>{if(e.target.hasAttribute('contenteditable'))saveAll();});
+  document.querySelectorAll('textarea').forEach(t=>t.addEventListener('input',saveAll));
+});
+</script>
+</body>
+</html>
